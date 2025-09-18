@@ -1,13 +1,20 @@
 package br.com.lojavirtual.model;
 
 public class Categoria {
+        private Long id;
+        private String nome;
+        private Long idCategoriaPai;
+        private Boolean ativo;
 
-    private Long id;
-    private String nome;
+    // polimorfismo de sobrecarga
+    // polimorfismo de sobreescrita
+    public Categoria() {}
 
-    public Categoria(Long id, String nome) {
+    public Categoria(Long id, String nome, Long idCategoriaPai, Boolean ativo) {
         this.id = id;
         this.nome = nome;
+        this.idCategoriaPai = idCategoriaPai;
+        this.ativo = ativo;
     }
 
     public Long getId() {
@@ -24,5 +31,21 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Long getIdCategoriaPai() {
+        return idCategoriaPai;
+    }
+
+    public void setIdCategoriaPai(Long idCategoriaPai) {
+        this.idCategoriaPai = idCategoriaPai;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }
