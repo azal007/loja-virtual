@@ -1,5 +1,8 @@
 package br.com.lojavirtual.dto;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CategoriaDTO {
     private Long id;
     private String nome;
