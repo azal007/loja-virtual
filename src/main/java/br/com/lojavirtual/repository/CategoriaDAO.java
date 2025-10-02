@@ -26,25 +26,22 @@ public class CategoriaDAO {
 
     public Categoria incluir(Categoria categoria) {
         jdbcTemplate.update("INSERT INTO Categoria (nome, id_categoria_pai) VALUES (?, ?)", categoria.getNome(), categoria.getIdCategoriaPai());
-        // Obtendo o último Id inserido no banco de dados
+        // Recupera o último ID inserido no banco de dados
         Long id = jdbcTemplate.queryForObject("SELECT c.id  FROM Categoria c WHERE c.id = LAST_INSERT_ID()", Long.class);
-        // retornando a categoria inserida com o Id
-        return jdbcTemplate.queryForObject("SELECT * FROM Categoria c WHERE c.id = ?", new BeanPropertyRowMapper<>(Categoria.class), id);
+        // Retorna a categoria recém-inserida com o ID gerado
+        return buscarPorId(id);
     }
 
     public Categoria atualizar(Long id, Categoria categoria) {
         jdbcTemplate.update("UPDATE Categoria c SET c.nome = ?, c.ativo = ? WHERE  (id) = ?", categoria.getNome(), categoria.getAtivo(), id);
-        return jdbcTemplate.queryForObject("SELECT c.id FROM Categoria c WHERE c.id = ?", new BeanPropertyRowMapper<>(Categoria.class), id);
+        return buscarPorId(id);
     }
 
     public void excluir(Long id) {
         jdbcTemplate.update("UPDATE Categoria c SET c.ativo = FALSE  WHERE id = ?", id);
     }
 
-    public boolean ehNulo(Long id_categoria_pai) {
-        // Seleciona o campo c.id da tabela Categoria e faz somatória de quantos "c.ids"
-        // correspondem ao id_categoria_pai passado como parâmetro da consulta, se for igual a 0
-        // retorna true (1), caso contrário retorna false (0).
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT COUNT(c.id) = 0 FROM Categoria c WHERE id_categoria_pai = ?", Boolean.class, id_categoria_pai));
+    public Boolean existeCategoria(Long idCategoriaPai) {
+        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categoria c WHERE c.id = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
 }

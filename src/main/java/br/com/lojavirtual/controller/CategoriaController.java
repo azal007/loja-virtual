@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// TODO: Modificar o parâmetro para receber CategoriaDTO
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaController {
@@ -19,12 +18,12 @@ public class CategoriaController {
     }
 
     @GetMapping(value = "/{id}")
-    public CategoriaDTO buscarPorId(@PathVariable Long id) {
-        return categoriaService.buscarPorId(id);
+    public ResponseEntity<CategoriaDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.buscarPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaDTO>> lista(){
+    public ResponseEntity<List<CategoriaDTO>> listar(){
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.listar());
     }
 

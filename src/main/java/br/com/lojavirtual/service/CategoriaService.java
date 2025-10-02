@@ -9,24 +9,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-// TODO: Ver como fazer o tratamento de exceções no spring boot sem usar ControlerAdvice, entender melhor o fluxo das exceções e quando lançá-las
 @Service
 public class CategoriaService {
     private final CategoriaDAO categoriaDAO;
-    private final CategoriaDTO categoriaDTO;
     private final CategoriaMapper categoriaMapper;
 
-    public CategoriaService(CategoriaDAO categoriaDAO, CategoriaDTO categoriaDTO, CategoriaMapper categoriaMapper) {
+    public CategoriaService(CategoriaDAO categoriaDAO, CategoriaMapper categoriaMapper) {
         this.categoriaDAO = categoriaDAO;
-        this.categoriaDTO = categoriaDTO;
         this.categoriaMapper = categoriaMapper;
     }
 
+    // TODO: Adicionar validação que não permita cadastrar categorias com o mesmo nome
     public CategoriaDTO buscarPorId(Long id) {
         Categoria categoria = categoriaDAO.buscarPorId(id);
-
-        // Se no momento que eu for buscar uma categoria, eu não informar um id,
-        // ou se no banco de dados não existir o id informado, eu lanço uma exception
         if (Objects.isNull(id) || Objects.isNull(categoria)) {
             throw new RuntimeException("Categoria não encontrada");
         }
@@ -39,34 +34,50 @@ public class CategoriaService {
         return categoria.stream().map(categoriaMapper::toDTO).toList();
     }
 
-    public CategoriaDTO incluir(CategoriaDTO categoriaDto) {
-        // Se no momento que eu for incluir uma categoria, eu informar uma categoria pai que não existe,
-        // ou se no banco de dados não existir categoria que contenha a categoria pai informada, eu lanço uma exception
-        if (Objects.isNull(categoriaDto.getIdCategoriaPai()) || categoriaDAO.ehNulo(categoriaDto.getIdCategoriaPai())) {
-            throw new RuntimeException("Categoria pai informada não existe");
+    public CategoriaDTO incluir(CategoriaDTO categoriaDTO) {
+        if (Objects.isNull(categoriaDTO)) {
+            throw new RuntimeException("Preencha os campos obrigatórios");
         }
-        Categoria categoria = categoriaMapper.toEntity(categoriaDto);
 
+        // Se, no momento de incluir uma categoria, eu informar uma categoria pai diferente de null, prossigo.
+        if (categoriaDTO.getIdCategoriaPai() != null) {
+            // Se, no momento que eu for incluir uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
+            Boolean existe = categoriaDAO.existeCategoria(categoriaDTO.getIdCategoriaPai());
+            if (!existe) {
+                throw new RuntimeException("Categoria pai informada não existe");
+            }
+        }
+        Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
         return categoriaMapper.toDTO(categoriaDAO.incluir(categoria));
     }
 
-    public CategoriaDTO atualizar(Long id, CategoriaDTO categoriaDto) {
-        Categoria categoria = categoriaMapper.toEntity(categoriaDto);
+    public CategoriaDTO atualizar(Long id, CategoriaDTO categoriaDTO) {
+        // Se, no momento de atualizar uma categoria, eu não informar os dados obrigatórios, lanço uma exception.
+        if (Objects.isNull(categoriaDTO)) {
+            throw new RuntimeException("Preencha os campos obrigatórios");
+        }
+        // Se, no momento de atualizar uma categoria, eu informar uma categoria que não existe, lanço uma exception.
         Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-
-        // Se no momento que eu for atualizar uma categoria, eu não informar um id,
-        // ou se no banco de dados não existir o id informado, eu lanço uma exception
-        if (Objects.isNull(id) || Objects.isNull(obterCategoria)) {
+        if (Objects.isNull(obterCategoria)) {
             throw new RuntimeException("Categoria pai informada não existe");
          }
+
+        // Se, no momento de atualizar uma categoria, eu informar uma categoria pai
+        if (categoriaDTO.getIdCategoriaPai() != null) {
+            // Se, no momento de atualizar uma categoria, for informada uma categoria pai que não existe, lanço uma exception.
+            Boolean existe = categoriaDAO.existeCategoria(categoriaDTO.getIdCategoriaPai());
+            if (!existe) {
+                throw new RuntimeException("Categoria pai informada não existe");
+            }
+        }
+        Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
         return categoriaMapper.toDTO(categoriaDAO.atualizar(id, categoria));
     }
 
     public void excluir(Long id) {
         Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-
-        // Se no momento que eu for excluir uma categoria, eu não informar um id,
-        // ou se no banco de dados não existir o id informado, eu lanço uma exception
+        // Se, no momento de excluir uma categoria, eu não informar um ID
+        // ou se o ID informado não existir no banco de dados, lanço uma exception.
         if (Objects.isNull(id) || Objects.isNull(obterCategoria)) {
             throw new RuntimeException("Categoria não encontrada");
         }
