@@ -2,6 +2,7 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.ProdutoDTO;
 import br.com.lojavirtual.mapper.ProdutoMapper;
+import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
@@ -40,11 +41,23 @@ public class ProdutoService {
     }
 
     public ProdutoDTO incluir(ProdutoDTO produtoDTO) {
-        // TODO: Se o ID da categoria for de uma categoria que tem subcategorias (filhos), dar o erro:
-        //  “A categoria informada é inválida, pois possui subcategorias.”
-        // TODO: Não permitir cadastrar 2 produtos com o mesmo nome
-        Produto produto = produtoMapper.toEntity(produtoDTO);
+        if (Objects.isNull(produtoDTO)) {
+            throw new RuntimeException("Preencha os campos obrigatórios");
+        }
 
+        // buscando o id da categoria pai por intermédio do "categoriaId" presente na requisição
+        Categoria categoriaPai = categoriaDAO.buscarPorId(produtoDTO.getCategoriaId());
+        // verificando se existe filhos na categoria pai passando o id da mesma
+        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCateoriaPai(categoriaPai.getId());
+        if (possuiFilhos){
+            throw new RuntimeException("A categoria informada é inválida pois possui subcategorias.");
+        }
+        // buscar os produtos do banco de dados com o mesmo nome que o da requisicao
+        Boolean mesmoNome = produtoDAO.possuiMesmoNome(produtoDTO.getNome());
+        if (mesmoNome) {
+            throw new RuntimeException("Não é possível cadastrar produtos com o mesmo nome.");
+        }
+        Produto produto = produtoMapper.toEntity(produtoDTO);
         return produtoMapper.toDTO(produtoDAO.incluir(produto));
     }
 
@@ -63,7 +76,7 @@ public class ProdutoService {
         // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai
         if (produtoDTO.getCategoriaId() != null) {
             // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
-            Boolean existe = categoriaDAO.existeCategoria(produtoDTO.getCategoriaId());
+            Boolean existe = categoriaDAO.existeCategoriaPai(produtoDTO.getCategoriaId());
             if (!existe) {
                 throw new RuntimeException("Categoria informada não existe");
             }

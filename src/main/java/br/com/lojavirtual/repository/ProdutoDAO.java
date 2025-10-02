@@ -66,4 +66,8 @@ public class ProdutoDAO {
     public void excluir(Long id) {
         jdbcTemplate.update("UPDATE Produtos p SET p.ativo = FALSE WHERE p.id = ?", id);
     }
+
+    public Boolean possuiMesmoNome(String nome){
+        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Produtos p WHERE p.nome = ?)", Boolean.class, nome);
+    }
 }

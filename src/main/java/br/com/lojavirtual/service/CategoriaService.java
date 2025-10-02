@@ -42,7 +42,7 @@ public class CategoriaService {
         // Se, no momento de incluir uma categoria, eu informar uma categoria pai diferente de null, prossigo.
         if (categoriaDTO.getIdCategoriaPai() != null) {
             // Se, no momento que eu for incluir uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
-            Boolean existe = categoriaDAO.existeCategoria(categoriaDTO.getIdCategoriaPai());
+            Boolean existe = categoriaDAO.existeCategoriaPai(categoriaDTO.getIdCategoriaPai());
             if (!existe) {
                 throw new RuntimeException("Categoria pai informada não existe");
             }
@@ -65,7 +65,7 @@ public class CategoriaService {
         // Se, no momento de atualizar uma categoria, eu informar uma categoria pai
         if (categoriaDTO.getIdCategoriaPai() != null) {
             // Se, no momento de atualizar uma categoria, for informada uma categoria pai que não existe, lanço uma exception.
-            Boolean existe = categoriaDAO.existeCategoria(categoriaDTO.getIdCategoriaPai());
+            Boolean existe = categoriaDAO.existeCategoriaPai(categoriaDTO.getIdCategoriaPai());
             if (!existe) {
                 throw new RuntimeException("Categoria pai informada não existe");
             }
