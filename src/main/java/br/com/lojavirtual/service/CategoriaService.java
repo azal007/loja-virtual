@@ -1,6 +1,7 @@
 package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.CategoriaDTO;
+import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.repository.CategoriaDAO;
@@ -23,7 +24,7 @@ public class CategoriaService {
     public CategoriaDTO buscarPorId(Long id) {
         Categoria categoria = categoriaDAO.buscarPorId(id);
         if (Objects.isNull(id) || Objects.isNull(categoria)) {
-            throw new RuntimeException("Categoria não encontrada");
+            throw new BusinessException("Categoria não encontrada");
         }
         return categoriaMapper.toDTO(categoria);
     }
@@ -36,7 +37,7 @@ public class CategoriaService {
 
     public CategoriaDTO incluir(CategoriaDTO categoriaDTO) {
         if (Objects.isNull(categoriaDTO)) {
-            throw new RuntimeException("Preencha os campos obrigatórios");
+            throw new BusinessException("Preencha os campos obrigatórios");
         }
 
         // Se, no momento de incluir uma categoria, eu informar uma categoria pai diferente de null, prossigo.
@@ -44,7 +45,7 @@ public class CategoriaService {
             // Se, no momento que eu for incluir uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
             Boolean existe = categoriaDAO.existeCategoriaPai(categoriaDTO.getIdCategoriaPai());
             if (!existe) {
-                throw new RuntimeException("Categoria pai informada não existe");
+                throw new BusinessException("Categoria pai informada não existe");
             }
         }
         System.out.println(categoriaDTO.getNome());
@@ -52,7 +53,7 @@ public class CategoriaService {
         System.out.println(possuiMesmoNome);
 
         if (possuiMesmoNome) {
-            throw new RuntimeException("Não é possível cadastrar categorias com o mesmo nome.");
+            throw new BusinessException("Não é possível cadastrar categorias com o mesmo nome.");
         }
 
         Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
@@ -62,12 +63,12 @@ public class CategoriaService {
     public CategoriaDTO atualizar(Long id, CategoriaDTO categoriaDTO) {
         // Se, no momento de atualizar uma categoria, eu não informar os dados obrigatórios, lanço uma exception.
         if (Objects.isNull(categoriaDTO)) {
-            throw new RuntimeException("Preencha os campos obrigatórios");
+            throw new BusinessException("Preencha os campos obrigatórios");
         }
         // Se, no momento de atualizar uma categoria, eu informar uma categoria que não existe, lanço uma exception.
         Categoria obterCategoria = categoriaDAO.buscarPorId(id);
         if (Objects.isNull(obterCategoria)) {
-            throw new RuntimeException("Categoria pai informada não existe");
+            throw new BusinessException("Categoria pai informada não existe");
          }
 
         // Se, no momento de atualizar uma categoria, eu informar uma categoria pai
@@ -75,7 +76,7 @@ public class CategoriaService {
             // Se, no momento de atualizar uma categoria, for informada uma categoria pai que não existe, lanço uma exception.
             Boolean existe = categoriaDAO.existeCategoriaPai(categoriaDTO.getIdCategoriaPai());
             if (!existe) {
-                throw new RuntimeException("Categoria pai informada não existe");
+                throw new BusinessException("Categoria pai informada não existe");
             }
         }
         Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
@@ -87,7 +88,7 @@ public class CategoriaService {
         // Se, no momento de excluir uma categoria, eu não informar um ID
         // ou se o ID informado não existir no banco de dados, lanço uma exception.
         if (Objects.isNull(id) || Objects.isNull(obterCategoria)) {
-            throw new RuntimeException("Categoria não encontrada");
+            throw new BusinessException("Categoria não encontrada");
         }
         categoriaDAO.excluir(id);
     }
