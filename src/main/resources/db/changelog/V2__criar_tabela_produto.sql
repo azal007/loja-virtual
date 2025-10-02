@@ -1,8 +1,8 @@
 CREATE TABLE Produtos (
     id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
     nome VARCHAR(100) NOT NULL,
-    descricao TEXT,
-    url_imagem VARCHAR(255) NOT NULL,
+    descricao VARCHAR(2000),
+    url_imagem TEXT NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
     ativo BOOLEAN DEFAULT TRUE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

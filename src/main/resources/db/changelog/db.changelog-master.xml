@@ -5,5 +5,5 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="/db/changelog/V1__criar_tabela_categoria.sql"/>
-
+    <include file="/db/changelog/V2__criar_tabela_produto.sql"/>
 </databaseChangeLog>
