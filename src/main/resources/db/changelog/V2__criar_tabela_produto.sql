@@ -1,0 +1,15 @@
+CREATE TABLE Produtos (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    url_imagem VARCHAR(255) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    categoria_id BIGINT NOT NULL,
+    CONSTRAINT fk_categoria
+        FOREIGN KEY (categoria_id)
+        REFERENCES Categoria(id)
+        ON DELETE CASCADE
+);
