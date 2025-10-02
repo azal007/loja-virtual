@@ -12,10 +12,10 @@ import java.util.List;
 // TODO: Adicionar tratamento de exceções
 @RestController
 @RequestMapping(value = "/produtos")
-public class ProductController {
+public class ProdutoController {
     private final ProdutoService produtoService;
 
-    public ProductController(ProdutoService produtoService) {
+    public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
