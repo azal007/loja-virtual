@@ -45,7 +45,11 @@ public class CategoriaDAO {
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categoria c WHERE c.id = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
 
-    public Boolean existeFilhosNaCateoriaPai(Long idCategoriaPai){
+    public Boolean existeFilhosNaCategoriaPai(Long idCategoriaPai){
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categoria c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
+    }
+
+    public Boolean possuiMesmoNome(String nome) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) > 0 FROM Categoria c WHERE c.nome = ?", Boolean.class, nome);
     }
 }

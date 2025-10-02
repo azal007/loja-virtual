@@ -47,6 +47,14 @@ public class CategoriaService {
                 throw new RuntimeException("Categoria pai informada não existe");
             }
         }
+        System.out.println(categoriaDTO.getNome());
+        Boolean possuiMesmoNome = categoriaDAO.possuiMesmoNome(categoriaDTO.getNome());
+        System.out.println(possuiMesmoNome);
+
+        if (possuiMesmoNome) {
+            throw new RuntimeException("Não é possível cadastrar categorias com o mesmo nome.");
+        }
+
         Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
         return categoriaMapper.toDTO(categoriaDAO.incluir(categoria));
     }

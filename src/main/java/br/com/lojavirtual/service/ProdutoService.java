@@ -48,7 +48,7 @@ public class ProdutoService {
         // buscando o id da categoria pai por intermédio do "categoriaId" presente na requisição
         Categoria categoriaPai = categoriaDAO.buscarPorId(produtoDTO.getCategoriaId());
         // verificando se existe filhos na categoria pai passando o id da mesma
-        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCateoriaPai(categoriaPai.getId());
+        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoriaPai(categoriaPai.getId());
         if (possuiFilhos){
             throw new RuntimeException("A categoria informada é inválida pois possui subcategorias.");
         }
