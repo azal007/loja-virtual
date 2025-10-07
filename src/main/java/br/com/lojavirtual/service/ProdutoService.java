@@ -16,13 +16,11 @@ import java.util.Objects;
 public class ProdutoService {
     private final CategoriaDAO categoriaDAO;
     private final ProdutoDAO produtoDAO;
-    private final ProdutoDTO produtoDTO;
     private final ProdutoMapper produtoMapper;
 
-    public ProdutoService(ProdutoDAO produtoDAO, ProdutoDTO produtoDTO, ProdutoMapper produtoMapper, CategoriaDAO categoriaDAO) {
+    public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, CategoriaDAO categoriaDAO) {
         this.categoriaDAO = categoriaDAO;
         this.produtoDAO = produtoDAO;
-        this.produtoDTO = produtoDTO;
         this.produtoMapper = produtoMapper;
     }
 
@@ -92,6 +90,6 @@ public class ProdutoService {
             throw new BusinessException("Produto não encontrado");
         }
 
-        produtoDAO.excluir(produtoDTO.getId());
+        produtoDAO.excluir(id);
     }
 }

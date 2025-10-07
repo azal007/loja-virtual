@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 public class CategoriaDTO {
     private Long id;
     private String nome;

@@ -12,7 +12,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 public class ProdutoDTO {
     private Long id;
     private String nome;
