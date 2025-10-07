@@ -3,31 +3,18 @@ package br.com.lojavirtual.config;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErroResponse {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime dataHora;
 	private String mensagem;
-
-	public ErroResponse(LocalDateTime dataHora, String mensagem) {
-		this.dataHora = dataHora;
-		this.mensagem = mensagem;
-	}
-
-	public LocalDateTime getDataHora() {
-		return dataHora;
-	}
-
-	public void setDataHora(LocalDateTime dataHora) {
-		this.dataHora = dataHora;
-	}
-
-	public String getMensagem() {
-		return mensagem;
-	}
-
-	public void setMensagem(String mensagem) {
-		this.mensagem = mensagem;
-	}
 }
