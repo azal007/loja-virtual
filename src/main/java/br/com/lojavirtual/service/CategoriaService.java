@@ -2,9 +2,12 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.CategoriaDTO;
 import br.com.lojavirtual.exception.BusinessException;
+import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +24,13 @@ public class CategoriaService {
     }
 
     // TODO: Adicionar validação que não permita cadastrar categorias com o mesmo nome
-    public CategoriaDTO buscarPorId(Long id) {
-        Categoria categoria = categoriaDAO.buscarPorId(id);
-        if (Objects.isNull(id) || Objects.isNull(categoria)) {
-            throw new BusinessException("Categoria não encontrada");
+    public CategoriaDTO buscarPorId(Long id) throws CustomEmptyResultDataAccessException{
+        try {
+            Categoria categoria = categoriaDAO.buscarPorId(id);
+            return categoriaMapper.toDTO(categoria);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomEmptyResultDataAccessException(Categoria.class.getSimpleName(), id);
         }
-        return categoriaMapper.toDTO(categoria);
     }
 
     public List<CategoriaDTO> listar(){

@@ -2,11 +2,13 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.ProdutoDTO;
 import br.com.lojavirtual.exception.BusinessException;
+import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
 import br.com.lojavirtual.mapper.ProdutoMapper;
 import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,13 +27,14 @@ public class ProdutoService {
     }
 
     public ProdutoDTO buscarPorId(Long id) {
-        Produto produto = produtoDAO.buscarPorId(id);
-        // Se ao buscar um produto o ID não for informado ou não existir no banco, lança uma exceção
-        if (Objects.isNull(id) || Objects.isNull(produto)) {
-            throw new BusinessException("Produto não encontrado");
+        try {
+            Produto produto = produtoDAO.buscarPorId(id);
+            return produtoMapper.toDTO(produto);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomEmptyResultDataAccessException(Produto.class.getSimpleName(), id);
         }
-        return produtoMapper.toDTO(produto);
     }
+
 
     public List<ProdutoDTO> listar(String nome, Long categoriaId, Double precoMin, Double precoMax) {
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax);
