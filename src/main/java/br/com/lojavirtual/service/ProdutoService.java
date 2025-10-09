@@ -2,12 +2,14 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.ProdutoDTO;
 import br.com.lojavirtual.exception.BusinessException;
+import br.com.lojavirtual.exception.CustomDataIntegrityViolationException;
 import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
 import br.com.lojavirtual.mapper.ProdutoMapper;
 import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,6 @@ public class ProdutoService {
         }
     }
 
-
     public List<ProdutoDTO> listar(String nome, Long categoriaId, Double precoMin, Double precoMax) {
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax);
 
@@ -43,24 +44,34 @@ public class ProdutoService {
     }
 
     public ProdutoDTO incluir(ProdutoDTO produtoDTO) {
-        if (Objects.isNull(produtoDTO)) {
-            throw new BusinessException("Preencha os campos obrigatórios");
+        try {
+            // Verifica se o campo "categoriId" está preenchido na requisição
+            if (produtoDTO.getCategoriaId() != null) {
+                // obtendo id da Categoria que veio na requisição
+                Long categoriaId = produtoDTO.getCategoriaId();
+                // verificando se a categoria informada existe
+                Boolean existe = categoriaDAO.existeCategoria(categoriaId);
+                if (!existe) {
+                    throw new BusinessException("Categoria pai informada não existe");
+                }
+                // obtendo a entidade Categoria por intermédio do "categoriaId" presente na requisição
+                Categoria categoriaPai = categoriaDAO.buscarPorId(categoriaId);
+                // verificando se existe filhos na categoria obtida passando o id da mesma
+                Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoria(categoriaPai.getId());
+                if (possuiFilhos){
+                    throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");
+                }
+            }
+            // verificando se o nome do produto informado já existe
+            Boolean possuiMesmoNome = produtoDAO.possuiMesmoNome(produtoDTO.getNome());
+            if (possuiMesmoNome) {
+                throw new BusinessException("Não é possível cadastrar produtos com o mesmo nome.");
+            }
+            Produto produto = produtoMapper.toEntity(produtoDTO);
+            return produtoMapper.toDTO(produtoDAO.incluir(produto));
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomDataIntegrityViolationException("Preencha os campos obrigatórios");
         }
-
-        // buscando o id da categoria pai por intermédio do "categoriaId" presente na requisição
-        Categoria categoriaPai = categoriaDAO.buscarPorId(produtoDTO.getCategoriaId());
-        // verificando se existe filhos na categoria pai passando o id da mesma
-        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoriaPai(categoriaPai.getId());
-        if (possuiFilhos){
-            throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");
-        }
-        // buscar os produtos do banco de dados com o mesmo nome que o da requisicao
-        Boolean mesmoNome = produtoDAO.possuiMesmoNome(produtoDTO.getNome());
-        if (mesmoNome) {
-            throw new BusinessException("Não é possível cadastrar produtos com o mesmo nome.");
-        }
-        Produto produto = produtoMapper.toEntity(produtoDTO);
-        return produtoMapper.toDTO(produtoDAO.incluir(produto));
     }
 
     public ProdutoDTO atualizar(Long id, ProdutoDTO produtoDTO) {
@@ -78,7 +89,7 @@ public class ProdutoService {
         // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai
         if (produtoDTO.getCategoriaId() != null) {
             // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
-            Boolean existe = categoriaDAO.existeCategoriaPai(produtoDTO.getCategoriaId());
+            Boolean existe = categoriaDAO.existeCategoria(produtoDTO.getCategoriaId());
             if (!existe) {
                 throw new BusinessException("Categoria informada não existe");
             }

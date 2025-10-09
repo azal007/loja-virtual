@@ -3,6 +3,7 @@ package br.com.lojavirtual.config;
 import java.time.LocalDateTime;
 
 import br.com.lojavirtual.exception.BusinessException;
+import br.com.lojavirtual.exception.CustomDataIntegrityViolationException;
 import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class LojaVirtualExceptionHandler extends ResponseEntityExceptionHandler 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(erroResponse);
     }
+    @ExceptionHandler(CustomDataIntegrityViolationException.class)
+    public ResponseEntity<?> handleCustomDataIntegrityViolationException(CustomDataIntegrityViolationException e){
+        ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(erroResponse);
+    }
 }
 

@@ -41,11 +41,11 @@ public class CategoriaDAO {
         jdbcTemplate.update("UPDATE Categoria c SET c.ativo = FALSE  WHERE id = ?", id);
     }
 
-    public Boolean existeCategoriaPai(Long idCategoriaPai) {
+    public Boolean existeCategoria(Long idCategoriaPai) {
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categoria c WHERE c.id = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
 
-    public Boolean existeFilhosNaCategoriaPai(Long idCategoriaPai){
+    public Boolean existeFilhosNaCategoria(Long idCategoriaPai){
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categoria c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
 
