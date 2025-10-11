@@ -1,13 +1,14 @@
 package br.com.lojavirtual.mapper;
 
-import br.com.lojavirtual.dto.CategoriaDTO;
+import br.com.lojavirtual.dto.CategoriaRequest;
+import br.com.lojavirtual.dto.CategoriaResponse;
 import br.com.lojavirtual.model.Categoria;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoriaMapper {
-    public CategoriaDTO toDTO(Categoria categoria) {
-        return new CategoriaDTO(
+    public CategoriaResponse toResponse(Categoria categoria) {
+        return new CategoriaResponse(
             categoria.getId(),
             categoria.getNome(),
             categoria.getIdCategoriaPai(),
@@ -15,12 +16,12 @@ public class CategoriaMapper {
         );
     }
 
-    public Categoria toEntity(CategoriaDTO categoriaDTO) {
+    public Categoria toEntity(CategoriaRequest request) {
         return new Categoria(
-            categoriaDTO.getId(),
-            categoriaDTO.getNome(),
-            categoriaDTO.getIdCategoriaPai(),
-            categoriaDTO.getAtivo()
+            null,
+            request.getNome(),
+            request.getIdCategoriaPai(),
+            Boolean.TRUE
         );
     }
 }

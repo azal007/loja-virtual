@@ -2,9 +2,7 @@ package br.com.lojavirtual.config;
 
 import java.time.LocalDateTime;
 
-import br.com.lojavirtual.exception.BusinessException;
-import br.com.lojavirtual.exception.CustomDataIntegrityViolationException;
-import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
+import br.com.lojavirtual.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,28 +12,45 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class LojaVirtualExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(BusinessException.class)
-	public ResponseEntity<?> handleBusinessException(BusinessException e) {
-		ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
-		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(erroResponse);
-	}
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<?> handleBusinessException(BusinessException e) {
+        ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(erroResponse);
+    }
+
+    @ExceptionHandler(IntegrationException.class)
+    public ResponseEntity<?> handleIntegrationException(IntegrationException e) {
+        ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(erroResponse);
+    }
 
     @ExceptionHandler(CustomEmptyResultDataAccessException.class)
-    public ResponseEntity<?> handleCustomEmptyResultDataAccessException(CustomEmptyResultDataAccessException e){
+    public ResponseEntity<?> handleCustomEmptyResultDataAccessException(CustomEmptyResultDataAccessException e) {
         String mensagem = "Entidade: " + e.getNome() + ", ID: " + e.getId() + " - " + e.getMessage();
         ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), mensagem);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(erroResponse);
     }
+
     @ExceptionHandler(CustomDataIntegrityViolationException.class)
-    public ResponseEntity<?> handleCustomDataIntegrityViolationException(CustomDataIntegrityViolationException e){
+    public ResponseEntity<?> handleCustomDataIntegrityViolationException(CustomDataIntegrityViolationException e) {
         ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(erroResponse);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException e) {
+        ValidationResponse response = new ValidationResponse(LocalDateTime.now(), e.getErrors());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(response);
     }
 }
 
