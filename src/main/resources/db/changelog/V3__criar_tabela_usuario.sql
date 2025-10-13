@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS Usuarios (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
+    nome TEXT,
+    apelido VARCHAR(200),
+    cpf VARCHAR(11),
+    dataNascimento DATE,
+    email VARCHAR(255),
+    senha VARCHAR(255),
+    habilitarNotificacoesPromocoes BOOLEAN,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)

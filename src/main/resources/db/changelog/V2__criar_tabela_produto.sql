@@ -1,4 +1,4 @@
-CREATE TABLE Produtos (
+CREATE TABLE IF NOT EXISTS Produtos (
     id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
     nome VARCHAR(100) NOT NULL,
     descricao VARCHAR(2000),
@@ -10,6 +10,6 @@ CREATE TABLE Produtos (
     categoria_id BIGINT NOT NULL,
     CONSTRAINT fk_categoria
         FOREIGN KEY (categoria_id)
-        REFERENCES Categoria(id)
+        REFERENCES Categorias(id)
         ON DELETE CASCADE
 );

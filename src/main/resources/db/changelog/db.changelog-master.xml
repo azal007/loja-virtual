@@ -6,4 +6,5 @@
 
     <include file="/db/changelog/V1__criar_tabela_categoria.sql"/>
     <include file="/db/changelog/V2__criar_tabela_produto.sql"/>
+    <include file="/db/changelog/V3__criar_tabela_usuario.sql"/>
 </databaseChangeLog>
