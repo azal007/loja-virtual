@@ -94,7 +94,7 @@ public class ProdutoService {
             if (!Objects.isNull(obterProduto)) {
                 produtoDAO.excluir(id);
             }
-        } catch (EntityNotFoundException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
         }
     }
