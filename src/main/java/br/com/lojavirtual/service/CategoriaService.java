@@ -3,9 +3,10 @@ package br.com.lojavirtual.service;
 import br.com.lojavirtual.dto.CategoriaRequest;
 import br.com.lojavirtual.dto.CategoriaResponse;
 import br.com.lojavirtual.exception.BusinessException;
-import br.com.lojavirtual.exception.CustomEmptyResultDataAccessException;
+import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,12 @@ public class CategoriaService {
         this.categoriaMapper = categoriaMapper;
     }
 
-    public CategoriaResponse buscarPorId(Long id) throws CustomEmptyResultDataAccessException {
+    public CategoriaResponse buscarPorId(Long id) {
         try {
             Categoria categoria = categoriaDAO.buscarPorId(id);
             return categoriaMapper.toResponse(categoria);
         } catch (EmptyResultDataAccessException e) {
-            throw new CustomEmptyResultDataAccessException(Categoria.class.getSimpleName(), id);
+            throw new EntityNotFoundException(Categoria.class.getSimpleName(), id);
         }
     }
 
@@ -59,16 +60,12 @@ public class CategoriaService {
     }
 
     public CategoriaResponse atualizar(Long id, CategoriaRequest request) {
-        // Se, no momento de atualizar uma categoria, eu não informar os dados obrigatórios, lanço uma exception.
-        if (Objects.isNull(request)) {
-            throw new BusinessException("Preencha os campos obrigatórios");
+        try {
+            // Se, no momento de atualizar uma categoria, eu informar uma categoria que não existe, lanço uma exception.
+            categoriaDAO.buscarPorId(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
         }
-        // Se, no momento de atualizar uma categoria, eu informar uma categoria que não existe, lanço uma exception.
-        Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-        if (Objects.isNull(obterCategoria)) {
-            throw new BusinessException("Categoria pai informada não existe");
-        }
-
         // Se, no momento de atualizar uma categoria, eu informar uma categoria pai
         if (request.getIdCategoriaPai() != null) {
             // Se, no momento de atualizar uma categoria, for informada uma categoria pai que não existe, lanço uma exception.
@@ -82,12 +79,14 @@ public class CategoriaService {
     }
 
     public void excluir(Long id) {
-        Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-        // Se, no momento de excluir uma categoria, eu não informar um ID
-        // ou se o ID informado não existir no banco de dados, lanço uma exception.
-        if (Objects.isNull(id) || Objects.isNull(obterCategoria)) {
-            throw new BusinessException("Categoria não encontrada");
+        try {
+            Categoria obterCategoria = categoriaDAO.buscarPorId(id);
+            // Se, no momento de excluir uma categoria, eu não informar um ID
+            if (!Objects.isNull(obterCategoria)) {
+                categoriaDAO.excluir(id);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(Categoria.class.getSimpleName(), id);
         }
-        categoriaDAO.excluir(id);
     }
 }

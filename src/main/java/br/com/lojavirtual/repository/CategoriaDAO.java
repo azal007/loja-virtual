@@ -1,9 +1,11 @@
 package br.com.lojavirtual.repository;
 
+import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Categoria;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,8 +25,10 @@ public class CategoriaDAO {
     public Categoria buscarPorId(Long id) {
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM Categoria c WHERE c.id = ? AND ativo = TRUE", new BeanPropertyRowMapper<>(Categoria.class), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            log.error("Ocorreu um erro ao buscar a categoria com id {}", id, e);
+            log.error("Ocorreu um erro ao buscar a categoria com id {}.", id, e);
             throw new IntegrationException();
         }
     }
@@ -33,7 +37,7 @@ public class CategoriaDAO {
         try {
             return jdbcTemplate.query("SELECT * FROM Categoria c WHERE c.ativo = TRUE", new BeanPropertyRowMapper<>(Categoria.class));
         } catch (Exception e) {
-            log.error("Ocorreu um erro ao listar as categoria", e);
+            log.error("Ocorreu um erro ao listar as categorias.", e);
             throw new IntegrationException();
         }
     }
@@ -46,7 +50,7 @@ public class CategoriaDAO {
             // Retorna a categoria recém-inserida com o ID gerado
             return buscarPorId(id);
         } catch (Exception e) {
-            log.error("Ocorreu um erro ao criar a categoria", e);
+            log.error("Ocorreu um erro ao criar a categoria.", e);
             throw new IntegrationException();
         }
     }
@@ -56,7 +60,7 @@ public class CategoriaDAO {
             jdbcTemplate.update("UPDATE Categoria c SET c.nome = ?, c.ativo = ? WHERE  (id) = ?", categoria.getNome(), categoria.getAtivo(), id);
             return buscarPorId(id);
         } catch (Exception e) {
-            log.error("Ocorreu um erro ao atualizar a categoria {}", id, e);
+            log.error("Ocorreu um erro ao atualizar a categoria {}.", id, e);
             throw new IntegrationException();
         }
     }
@@ -65,7 +69,7 @@ public class CategoriaDAO {
         try {
             jdbcTemplate.update("UPDATE Categoria c SET c.ativo = FALSE  WHERE id = ?", id);
         } catch (Exception e) {
-            log.error("Ocorreu um erro ao excluir a categoria {}", id, e);
+            log.error("Ocorreu um erro ao excluir a categoria com id {}.", id, e);
             throw new IntegrationException();
         }
     }

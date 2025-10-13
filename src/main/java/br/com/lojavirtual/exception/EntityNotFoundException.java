@@ -4,11 +4,11 @@ import lombok.Getter;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 @Getter
-public class CustomEmptyResultDataAccessException extends EmptyResultDataAccessException {
+public class EntityNotFoundException extends EmptyResultDataAccessException {
     private final String nome;
     private final Long id;
 
-    public CustomEmptyResultDataAccessException(String nome, Long id) {
+    public EntityNotFoundException(String nome, Long id) {
         super(1);
         this.nome = nome;
         this.id = id;
@@ -20,6 +20,6 @@ public class CustomEmptyResultDataAccessException extends EmptyResultDataAccessE
     }
 
     public String message() {
-        return "Não foi possível encontrar a entidade " + getNome() + " com o ID " + getId();
+        return "Não foi possível encontrar a " + getNome().toLowerCase() + " com id " + getId() + ".";
     }
 }

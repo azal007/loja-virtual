@@ -24,24 +24,15 @@ public class LojaVirtualExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<?> handleIntegrationException(IntegrationException e) {
         ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(erroResponse);
     }
 
-    @ExceptionHandler(CustomEmptyResultDataAccessException.class)
-    public ResponseEntity<?> handleCustomEmptyResultDataAccessException(CustomEmptyResultDataAccessException e) {
-        String mensagem = "Entidade: " + e.getNome() + ", ID: " + e.getId() + " - " + e.getMessage();
-        ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), mensagem);
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(erroResponse);
-    }
-
-    @ExceptionHandler(CustomDataIntegrityViolationException.class)
-    public ResponseEntity<?> handleCustomDataIntegrityViolationException(CustomDataIntegrityViolationException e) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e) {
         ErroResponse erroResponse = new ErroResponse(LocalDateTime.now(), e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(erroResponse);
     }
 
