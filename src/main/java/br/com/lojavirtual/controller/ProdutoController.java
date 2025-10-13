@@ -1,6 +1,7 @@
 package br.com.lojavirtual.controller;
 
-import br.com.lojavirtual.dto.ProdutoDTO;
+import br.com.lojavirtual.dto.ProdutoRequest;
+import br.com.lojavirtual.dto.ProdutoResponse;
 import br.com.lojavirtual.service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // TODO: Adicionar teste unitários para facilitar o desenvolvimento
-// TODO: Adicionar tratamento de exceções
 @RestController
 @RequestMapping(value = "/produtos")
 public class ProdutoController {
@@ -20,12 +20,12 @@ public class ProdutoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.buscarPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> listar(
+    public ResponseEntity<List<ProdutoResponse>> listar(
             @RequestParam(value = "nome", required=false) String nome,
             @RequestParam(value = "id", required = false) Long categoriaId,
             @RequestParam(value = "min", required = false) Double precoMin,
@@ -35,13 +35,15 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoDTO> incluir(@RequestBody ProdutoDTO produtoDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.incluir(produtoDTO));
+    public ResponseEntity<ProdutoResponse> incluir(@RequestBody ProdutoRequest request) {
+        request.validate();
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.incluir(request));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoDTO> atualizar(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizar(id, produtoDTO));
+    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @RequestBody ProdutoRequest request) {
+        request.validate();
+        return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizar(id, request));
     }
 
     @DeleteMapping(value = "/{id}")

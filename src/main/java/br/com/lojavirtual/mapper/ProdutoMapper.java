@@ -1,13 +1,14 @@
 package br.com.lojavirtual.mapper;
 
+import br.com.lojavirtual.dto.ProdutoRequest;
 import br.com.lojavirtual.model.Produto;
-import br.com.lojavirtual.dto.ProdutoDTO;
+import br.com.lojavirtual.dto.ProdutoResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProdutoMapper {
-    public ProdutoDTO toDTO(Produto produto) {
-        return new ProdutoDTO(
+    public ProdutoResponse toDTO(Produto produto) {
+        return new ProdutoResponse(
             produto.getId(),
             produto.getNome(),
             produto.getDescricao(),
@@ -20,17 +21,17 @@ public class ProdutoMapper {
         );
     }
 
-    public Produto toEntity(ProdutoDTO produtoDTO) {
+    public Produto toEntity(ProdutoRequest request) {
         return new Produto(
-            produtoDTO.getId(),
-            produtoDTO.getNome(),
-            produtoDTO.getDescricao(),
-            produtoDTO.getUrlImagem(),
-            produtoDTO.getPreco(),
-            produtoDTO.getAtivo(),
-            produtoDTO.getCriadoEm(),
-            produtoDTO.getAtualizadoEm(),
-            produtoDTO.getCategoriaId()
+            null,
+            request.getNome(),
+            request.getDescricao(),
+            request.getUrlImagem(),
+            request.getPreco(),
+            Boolean.TRUE,
+            null,
+            null,
+            request.getCategoriaId()
         );
     }
 }
