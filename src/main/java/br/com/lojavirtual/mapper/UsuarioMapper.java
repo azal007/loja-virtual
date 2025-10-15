@@ -16,7 +16,6 @@ public class UsuarioMapper {
                 usuario.getCpf(),
                 usuario.getDataNascimento(),
                 usuario.getEmail(),
-                usuario.getSenha(),
                 usuario.isHabilitarNotificacoesPromocoes(),
                 usuario.isAtivo(),
                 usuario.getCriadoEm(),

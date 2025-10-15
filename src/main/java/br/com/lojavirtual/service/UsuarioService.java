@@ -9,6 +9,8 @@ import br.com.lojavirtual.repository.UsuarioDAO;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuarioService {
     private final UsuarioDAO usuarioDAO;
@@ -26,6 +28,12 @@ public class UsuarioService {
             throw new EntityNotFoundException(Usuario.class.getSimpleName(), id);
         }
 
+    }
+
+    public List<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo) {
+        List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo);
+
+        return usuario.stream().map(usuarioMapper::toResponse).toList();
     }
 
     public UsuarioResponse incluir(UsuarioRequest request) {

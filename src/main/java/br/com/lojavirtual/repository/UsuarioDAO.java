@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Repository
 public class UsuarioDAO {
@@ -24,6 +27,36 @@ public class UsuarioDAO {
            throw e;
         }  catch (Exception e) {
             log.error("Ocorreu um erro ao buscar o usuário com id {}.", id, e);
+            throw new IntegrationException();
+        }
+    }
+
+    public List<Usuario> listar(String nome, String cpf, String email, Boolean ativo) {
+        try {
+            String sql = "SELECT * FROM Usuarios u WHERE 1=1";
+            List<Object> parametros = new ArrayList<>();
+
+            if (nome != null) {
+                sql += " AND u.nome LIKE ?";
+                parametros.add("%" + nome + "%");
+            }
+            if (cpf != null) {
+                sql += " AND cpf LIKE ?";
+                parametros.add("%" + cpf + "%");
+            }
+
+            if (email != null) {
+                sql += " AND email LIKE ?";
+                parametros.add("%" + email + "%");
+            }
+
+            if (ativo != null) {
+                sql += " AND ativo = ?";
+                parametros.add(ativo);
+            }
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Usuario.class), parametros.toArray());
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao listar os usuários.", e);
             throw new IntegrationException();
         }
     }
