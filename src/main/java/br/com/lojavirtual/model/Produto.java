@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -16,7 +17,7 @@ public class Produto {
     private String nome;
     private String descricao;
     private String urlImagem;
-    private Double preco;
+    private BigDecimal preco;
     private Boolean ativo;
     private Date criadoEm;
     private Date atualizadoEm;

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 @Getter
@@ -16,7 +17,7 @@ public class ProdutoRequest {
     private String nome;
     private String descricao;
     private String urlImagem;
-    private Double preco;
+    private BigDecimal preco;
     private Long categoriaId;
 
     HashMap<String, String> errors = new HashMap<>();

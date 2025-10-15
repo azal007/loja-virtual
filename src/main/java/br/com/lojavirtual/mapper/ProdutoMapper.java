@@ -5,6 +5,8 @@ import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.dto.ProdutoResponse;
 import org.springframework.stereotype.Component;
 
+import java.math.RoundingMode;
+
 @Component
 public class ProdutoMapper {
     public ProdutoResponse toDTO(Produto produto) {
@@ -13,7 +15,7 @@ public class ProdutoMapper {
             produto.getNome(),
             produto.getDescricao(),
             produto.getUrlImagem(),
-            produto.getPreco(),
+            produto.getPreco().setScale(2, RoundingMode.HALF_UP),
             produto.getAtivo(),
             produto.getCriadoEm(),
             produto.getAtualizadoEm(),
