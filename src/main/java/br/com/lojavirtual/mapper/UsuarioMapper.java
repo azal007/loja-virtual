@@ -2,6 +2,7 @@ package br.com.lojavirtual.mapper;
 
 import br.com.lojavirtual.dto.UsuarioRequest;
 import br.com.lojavirtual.dto.UsuarioResponse;
+import br.com.lojavirtual.dto.UsuarioUpdateRequest;
 import br.com.lojavirtual.model.Usuario;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,22 @@ public class UsuarioMapper {
                 request.getEmail(),
                 request.getSenha(),
                 Boolean.FALSE,
+                Boolean.TRUE,
+                null,
+                null
+        );
+    }
+
+    public Usuario toEntityUpdate(UsuarioUpdateRequest request) {
+        return new Usuario(
+                null,
+                request.getNome(),
+                request.getApelido(),
+                request.getCpf(),
+                request.getDataNascimento(),
+                request.getEmail(),
+                null,
+                request.isHabilitarNotificacoesPromocoes(),
                 Boolean.TRUE,
                 null,
                 null

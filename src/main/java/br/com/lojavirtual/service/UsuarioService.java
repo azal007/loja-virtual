@@ -2,6 +2,7 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.UsuarioRequest;
 import br.com.lojavirtual.dto.UsuarioResponse;
+import br.com.lojavirtual.dto.UsuarioUpdateRequest;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.UsuarioMapper;
 import br.com.lojavirtual.model.Usuario;
@@ -39,5 +40,16 @@ public class UsuarioService {
     public UsuarioResponse incluir(UsuarioRequest request) {
         Usuario usuario = usuarioMapper.toEntity(request);
         return usuarioMapper.toResponse(usuarioDAO.incluir(usuario));
+    }
+
+    public UsuarioResponse atualizar(Long id, UsuarioUpdateRequest request) {
+        try {
+            usuarioDAO.buscarPorId(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(Usuario.class.getSimpleName(), id);
+        }
+
+        Usuario usuario = usuarioMapper.toEntityUpdate(request);
+        return usuarioMapper.toResponse(usuarioDAO.atualizar(id, usuario));
     }
 }
