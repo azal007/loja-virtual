@@ -18,7 +18,6 @@ public class UsuarioResponse {
     private String cpf;
     private Date dataNascimento;
     private String email;
-    private String senha;
     private boolean habilitarNotificacoesPromocoes;
     private boolean ativo;
     private Date criadoEm;
