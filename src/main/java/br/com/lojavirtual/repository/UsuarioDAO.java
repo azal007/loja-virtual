@@ -4,6 +4,7 @@ import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Usuario;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ public class UsuarioDAO {
 
     public Usuario buscarPorId(Long id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Usuarios u WHERE u.id = ?", Usuario.class, id);
+            return jdbcTemplate.queryForObject("SELECT * FROM Usuarios u WHERE u.id = ?", new BeanPropertyRowMapper<>(Usuario.class), id);
         } catch (EmptyResultDataAccessException e) {
            throw e;
         }  catch (Exception e) {

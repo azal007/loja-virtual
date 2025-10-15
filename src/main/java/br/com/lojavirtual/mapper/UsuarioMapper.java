@@ -33,8 +33,8 @@ public class UsuarioMapper {
                 null,
                 request.getEmail(),
                 request.getSenha(),
-                Boolean.TRUE,
                 Boolean.FALSE,
+                Boolean.TRUE,
                 null,
                 null
         );

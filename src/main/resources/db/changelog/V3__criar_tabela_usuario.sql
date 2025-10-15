@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     dataNascimento DATE,
     email VARCHAR(255),
     senha VARCHAR(255),
-    habilitarNotificacoesPromocoes BOOLEAN,
+    habilitarNotificacoesPromocoes BOOLEAN DEFAULT FALSE,
     ativo BOOLEAN DEFAULT TRUE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
