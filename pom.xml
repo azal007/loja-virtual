@@ -72,7 +72,7 @@
 <!--		<dependency>-->
 <!--			<groupId>io.springfox</groupId>-->
 <!--			<artifactId>springfox-swagger-ui</artifactId>-->
-<!--&lt;!&ndash;			<version>3.0.0</version>&ndash;&gt;-->
+<!--			<version>3.0.0</version>-->
 <!--		</dependency>-->
 
 		<dependency>
