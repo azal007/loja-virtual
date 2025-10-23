@@ -29,9 +29,10 @@ public class ProdutoController {
             @RequestParam(value = "nome", required=false) String nome,
             @RequestParam(value = "id", required = false) Long categoriaId,
             @RequestParam(value = "min", required = false) Double precoMin,
-            @RequestParam(value = "max", required = false) Double precoMax
+            @RequestParam(value = "max", required = false) Double precoMax,
+            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(produtoService.listar(nome, categoriaId, precoMin, precoMax));
+        return ResponseEntity.status(HttpStatus.OK).body(produtoService.listar(nome, categoriaId, precoMin, precoMax, ativo));
     }
 
     @PostMapping

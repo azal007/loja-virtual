@@ -36,8 +36,8 @@ public class ProdutoService {
         }
     }
 
-    public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax) {
-        List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax);
+    public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
+        List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo);
 
         return produto.stream().map(produtoMapper::toDTO).toList();
     }

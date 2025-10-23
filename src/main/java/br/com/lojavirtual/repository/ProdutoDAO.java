@@ -3,7 +3,6 @@ package br.com.lojavirtual.repository;
 import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Produto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +31,7 @@ public class ProdutoDAO {
         }
     }
 
-    public List<Produto> listar(String nome, Long categoriaId, Double precoMin, Double precoMax) {
+    public List<Produto> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
         try {
             String sql = "SELECT * FROM Produtos p WHERE 1=1";
             List<Object> parametros = new ArrayList<>();
@@ -62,6 +61,12 @@ public class ProdutoDAO {
                 parametros.add(precoMin);
                 parametros.add(precoMax);
             }
+
+            if (ativo != null ) {
+                sql += " AND p.ativo = ?";
+                parametros.add(ativo);
+            }
+
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class), parametros.toArray());
         } catch (Exception e) {
             log.error("Ocorreu um erro ao listar os produtos.", e);
