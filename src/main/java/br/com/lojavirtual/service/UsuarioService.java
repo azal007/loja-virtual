@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UsuarioService {
@@ -51,5 +52,17 @@ public class UsuarioService {
 
         Usuario usuario = usuarioMapper.toEntityUpdate(request);
         return usuarioMapper.toResponse(usuarioDAO.atualizar(id, usuario));
+    }
+
+    public void excluir(Long id) {
+        try {
+            Usuario obterUsuario = usuarioDAO.buscarPorId(id);
+
+            if (!Objects.isNull(obterUsuario) ) {
+                usuarioDAO.excluir(id);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(Usuario.class.getSimpleName(), id);
+        }
     }
 }

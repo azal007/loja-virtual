@@ -29,7 +29,7 @@ public class UsuarioController {
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "cpf", required = false) String cpf,
             @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "ativo", required = false) Boolean ativo
+            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.listar(nome, cpf, email, ativo));
     }
@@ -42,6 +42,13 @@ public class UsuarioController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UsuarioResponse> atualizar(@PathVariable Long id, @RequestBody UsuarioUpdateRequest request) {
+        request.validate();
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizar(id, request));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        usuarioService.excluir(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

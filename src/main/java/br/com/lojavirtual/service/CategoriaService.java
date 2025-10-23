@@ -81,7 +81,6 @@ public class CategoriaService {
     public void excluir(Long id) {
         try {
             Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-            // Se, no momento de excluir uma categoria, eu não informar um ID
             if (!Objects.isNull(obterCategoria)) {
                 categoriaDAO.excluir(id);
             }

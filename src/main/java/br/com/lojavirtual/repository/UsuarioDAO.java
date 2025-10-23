@@ -74,9 +74,19 @@ public class UsuarioDAO {
 
     public Usuario atualizar(Long id, Usuario usuario) {
         try {
-            log.info(usuario.getNome());
             jdbcTemplate.update("UPDATE Usuarios u SET u.nome = ?, u.apelido = ?, u.cpf = ?, u.dataNascimento = ?, u.email = ?, u.habilitarNotificacoesPromocoes = ? WHERE u.id = ?", usuario.getNome(), usuario.getApelido(), usuario.getCpf(), usuario.getDataNascimento(), usuario.getEmail(), usuario.isHabilitarNotificacoesPromocoes(), id);
             return buscarPorId(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao atualizar o usuário.", e);
+            throw new IntegrationException();
+        }
+    }
+
+    public void excluir(Long id) {
+        try {
+            jdbcTemplate.update("UPDATE Usuarios u SET u.ativo = FALSE WHERE u.id = ?", id);
         } catch (EmptyResultDataAccessException e) {
             throw e;
         } catch (Exception e) {

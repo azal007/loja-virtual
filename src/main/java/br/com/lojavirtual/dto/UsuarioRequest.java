@@ -18,15 +18,15 @@ public class UsuarioRequest {
 
     public void validate() {
         if (email == null) {
-            errors.put("email", "O campo é email é obrigatório.");
+            errors.put("email", "O campo email é obrigatório.");
         }
 
         if (senha == null) {
-            errors.put("email", "O campo é senha é obrigatório.");
+            errors.put("email", "O campo senha é obrigatório.");
         }
 
         if (confirmarSenha == null) {
-            errors.put("confirmarSenha", "O campo é confirmarSenha é obrigatório.");
+            errors.put("confirmarSenha", "O campo confirmarSenha é obrigatório.");
         }
 
         if (senha != null && !senha.equals(confirmarSenha)) {
