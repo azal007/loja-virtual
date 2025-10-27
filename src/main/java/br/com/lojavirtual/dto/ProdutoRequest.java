@@ -1,46 +1,28 @@
 package br.com.lojavirtual.dto;
 
-import br.com.lojavirtual.exception.ValidationException;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoRequest {
+
+    @NotEmpty
     private String nome;
+    @NotEmpty
     private String descricao;
+    @NotEmpty
     private String urlImagem;
+    @NotNull
     private BigDecimal preco;
+    @NotNull
     private Long categoriaId;
-
-    HashMap<String, String> errors = new HashMap<>();
-
-    public void validate() {
-        if (nome == null || nome.isBlank()) {
-            errors.put("nome", "O campo nome é obrigatório.");
-        }
-
-        if (urlImagem == null || urlImagem.isBlank()) {
-            errors.put("urlImagem", "O campo urlImagem é obrigatório.");
-        }
-
-        if (preco == null) {
-            errors.put("preco", "O campo preco é obrigatório.");
-        }
-
-        if (categoriaId == null) {
-            errors.put("categoriaId", "O campo categoriaId é obrigatório.");
-        }
-
-        if (!errors.isEmpty()) {
-            throw new ValidationException(errors);
-        }
-    }
 }

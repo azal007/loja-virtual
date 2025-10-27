@@ -3,6 +3,7 @@ package br.com.lojavirtual.controller;
 import br.com.lojavirtual.dto.ProdutoRequest;
 import br.com.lojavirtual.dto.ProdutoResponse;
 import br.com.lojavirtual.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +37,12 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoResponse> incluir(@RequestBody ProdutoRequest request) {
-        request.validate();
+    public ResponseEntity<ProdutoResponse> incluir(@Valid @RequestBody ProdutoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.incluir(request));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @RequestBody ProdutoRequest request) {
-        request.validate();
+    public ResponseEntity<ProdutoResponse> atualizar(@Valid @PathVariable Long id, @RequestBody ProdutoRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizar(id, request));
     }
 

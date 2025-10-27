@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS Categorias (
     id_categoria_pai BIGINT,
     CONSTRAINT fk_categoria_pai
         FOREIGN KEY (id_categoria_pai)
-        REFERENCES Categoria(id)
+        REFERENCES Categorias(id)
         ON DELETE CASCADE
 );
