@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,4 +16,6 @@ public class CategoriaResponse {
     private String nome;
     private Long idCategoriaPai;
     private Boolean ativo;
+    private Date criadoEm;
+    private Date atualizadoEm;
 }
