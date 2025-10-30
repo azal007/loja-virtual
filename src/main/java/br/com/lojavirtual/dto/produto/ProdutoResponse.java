@@ -1,4 +1,4 @@
-package br.com.lojavirtual.dto;
+package br.com.lojavirtual.dto.produto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

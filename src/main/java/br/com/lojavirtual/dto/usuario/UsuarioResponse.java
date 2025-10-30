@@ -1,4 +1,4 @@
-package br.com.lojavirtual.dto;
+package br.com.lojavirtual.dto.usuario;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package br.com.lojavirtual.dto;
+package br.com.lojavirtual.dto.categoria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package br.com.lojavirtual.dto;
+package br.com.lojavirtual.dto.usuario;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
