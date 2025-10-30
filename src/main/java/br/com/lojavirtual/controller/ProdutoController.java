@@ -1,7 +1,7 @@
 package br.com.lojavirtual.controller;
 
-import br.com.lojavirtual.dto.ProdutoRequest;
-import br.com.lojavirtual.dto.ProdutoResponse;
+import br.com.lojavirtual.dto.produto.ProdutoRequest;
+import br.com.lojavirtual.dto.produto.ProdutoResponse;
 import br.com.lojavirtual.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class ProdutoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoResponse> atualizar(@Valid @PathVariable Long id, @RequestBody ProdutoRequest request) {
+    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizar(id, request));
     }
 

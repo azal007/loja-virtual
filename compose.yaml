@@ -8,6 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
+#      TZ: America/Sao_Paulo
     ports:
       - "3306:3306"
     volumes:

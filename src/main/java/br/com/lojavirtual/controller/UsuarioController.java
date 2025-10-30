@@ -1,9 +1,10 @@
 package br.com.lojavirtual.controller;
 
-import br.com.lojavirtual.dto.UsuarioRequest;
-import br.com.lojavirtual.dto.UsuarioResponse;
-import br.com.lojavirtual.dto.UsuarioUpdateRequest;
+import br.com.lojavirtual.dto.usuario.UsuarioRequest;
+import br.com.lojavirtual.dto.usuario.UsuarioResponse;
+import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
 import br.com.lojavirtual.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,12 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> incluir(@RequestBody UsuarioRequest request) {
-        request.validate();
+    public ResponseEntity<UsuarioResponse> incluir(@Valid  @RequestBody UsuarioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.incluir(request));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UsuarioResponse> atualizar(@PathVariable Long id, @RequestBody UsuarioUpdateRequest request) {
-        request.validate();
+    public ResponseEntity<UsuarioResponse> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizar(id, request));
     }
 

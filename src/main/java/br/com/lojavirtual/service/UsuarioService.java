@@ -1,8 +1,8 @@
 package br.com.lojavirtual.service;
 
-import br.com.lojavirtual.dto.UsuarioRequest;
-import br.com.lojavirtual.dto.UsuarioResponse;
-import br.com.lojavirtual.dto.UsuarioUpdateRequest;
+import br.com.lojavirtual.dto.usuario.UsuarioRequest;
+import br.com.lojavirtual.dto.usuario.UsuarioResponse;
+import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.UsuarioMapper;
 import br.com.lojavirtual.model.Usuario;

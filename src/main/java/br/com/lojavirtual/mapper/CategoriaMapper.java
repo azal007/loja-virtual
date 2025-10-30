@@ -1,7 +1,7 @@
 package br.com.lojavirtual.mapper;
 
-import br.com.lojavirtual.dto.CategoriaRequest;
-import br.com.lojavirtual.dto.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaRequest;
+import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.model.Categoria;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,9 @@ public class CategoriaMapper {
             categoria.getId(),
             categoria.getNome(),
             categoria.getIdCategoriaPai(),
-            categoria.getAtivo()
+            categoria.getAtivo(),
+            categoria.getCriadoEm(),
+            categoria.getAtualizadoEm()
         );
     }
 
@@ -21,7 +23,9 @@ public class CategoriaMapper {
             null,
             request.getNome(),
             request.getIdCategoriaPai(),
-            Boolean.TRUE
+            Boolean.TRUE,
+            null,
+            null
         );
     }
 }

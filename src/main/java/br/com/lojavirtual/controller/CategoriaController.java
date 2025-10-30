@@ -1,8 +1,9 @@
 package br.com.lojavirtual.controller;
 
-import br.com.lojavirtual.dto.CategoriaRequest;
-import br.com.lojavirtual.dto.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaRequest;
+import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.service.CategoriaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +30,12 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponse> incluir(@RequestBody CategoriaRequest request) {
-        request.validate();
+    public ResponseEntity<CategoriaResponse> incluir(@Valid @RequestBody CategoriaRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.incluir(request));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CategoriaResponse> atualizar(@PathVariable Long id, @RequestBody CategoriaRequest request) {
-        request.validate();
+    public ResponseEntity<CategoriaResponse> atualizar(@PathVariable Long id, @Valid @RequestBody CategoriaRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.atualizar(id, request));
     }
 

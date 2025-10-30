@@ -1,8 +1,8 @@
 package br.com.lojavirtual.mapper;
 
-import br.com.lojavirtual.dto.ProdutoRequest;
+import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.model.Produto;
-import br.com.lojavirtual.dto.ProdutoResponse;
+import br.com.lojavirtual.dto.produto.ProdutoResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.RoundingMode;

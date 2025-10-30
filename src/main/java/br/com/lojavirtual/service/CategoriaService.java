@@ -1,7 +1,7 @@
 package br.com.lojavirtual.service;
 
-import br.com.lojavirtual.dto.CategoriaRequest;
-import br.com.lojavirtual.dto.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaRequest;
+import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;

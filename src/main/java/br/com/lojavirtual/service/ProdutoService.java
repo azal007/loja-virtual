@@ -1,7 +1,7 @@
 package br.com.lojavirtual.service;
 
-import br.com.lojavirtual.dto.ProdutoRequest;
-import br.com.lojavirtual.dto.ProdutoResponse;
+import br.com.lojavirtual.dto.produto.ProdutoRequest;
+import br.com.lojavirtual.dto.produto.ProdutoResponse;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.ProdutoMapper;
