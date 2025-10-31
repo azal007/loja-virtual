@@ -11,7 +11,7 @@ public abstract class BaseDAO {
     private final String tabela;
 
     public BaseDAO() {
-        this.tabela = obterNomeEntidade();
+        this.tabela = obterNomeEntidade() + "s";
 //        log.info("Nome da tabela: " +  this.tabela);
     }
 
@@ -24,7 +24,7 @@ public abstract class BaseDAO {
         }
         return nomeEntidade;
     }
-    public Boolean possuiMesmoNome(String nome) {
+    public Boolean verificaPossuiMesmoNome(String nome) {
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ?)", Boolean.class, nome);
     }
 }

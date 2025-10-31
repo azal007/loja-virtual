@@ -9,6 +9,7 @@ import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -17,79 +18,71 @@ import java.util.Objects;
 
 @Service
 public class ProdutoService extends BaseService<ProdutoDAO> {
-    private final CategoriaDAO categoriaDAO;
     private final ProdutoDAO produtoDAO;
     private final ProdutoMapper produtoMapper;
+    private final CategoriaService categoriaService;
 
-    public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, CategoriaDAO categoriaDAO) {
+    public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, CategoriaService categoriaService) {
         super(produtoDAO);
-        this.categoriaDAO = categoriaDAO;
         this.produtoDAO = produtoDAO;
         this.produtoMapper = produtoMapper;
+        this.categoriaService = categoriaService;
     }
 
     public ProdutoResponse buscarPorId(Long id) {
-        try {
-            Produto produto = produtoDAO.buscarPorId(id);
-            return produtoMapper.toDTO(produto);
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
-        }
+        return produtoMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
-        List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo);
+    public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+        List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina);
 
-        return produto.stream().map(produtoMapper::toDTO).toList();
+        return produto.stream().map(produtoMapper::toResponse).toList();
     }
 
     public ProdutoResponse incluir(ProdutoRequest request) {
         String nome = request.getNome();
-        String nomeEntidade = "produtos";
         Long categoriaId = request.getCategoriaId();
         Produto produto = produtoMapper.toEntity(request);
 
-        verificaCategoriaExiste(categoriaId);
-        verificaPossuiFilhos(categoriaId);
-        verificaEntidadePossuiMesmoNome(nome, nomeEntidade);
-        return produtoMapper.toDTO(produtoDAO.incluir(produto));
+        validaCategoriaExiste(categoriaId);
+        validaPossuiFilhos(categoriaId);
+        validaEntidadePossuiMesmoNome(nome);
+
+        return produtoMapper.toResponse(produtoDAO.incluir(produto));
     }
 
+    @Transactional
     public ProdutoResponse atualizar(Long id, ProdutoRequest request) {
-        try {
-            // Se ao atualizar um produto for informada uma categoria inexistente, lança uma exceção
-            produtoDAO.buscarPorId(id);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
-        }
-        // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai
-        if (request.getCategoriaId() != null) {
-            // Se no momento que eu for atualizar uma categoria, eu informar uma categoria pai que não existe, lanço uma exception
-            Boolean existe = categoriaDAO.existeCategoria(request.getCategoriaId());
-            if (!existe) {
-                throw new BusinessException("Categoria informada não existe");
-            }
-        }
+        String nome = request.getNome();
+        Long categoriaId = request.getCategoriaId();
+
+        validaBuscarPorId(id);
+        validaCategoriaExiste(categoriaId);
+        validaEntidadePossuiMesmoNome(nome);
+
         Produto produto = produtoMapper.toEntity(request);
-        return produtoMapper.toDTO(produtoDAO.atualizar(id, produto));
+        return produtoMapper.toResponse(produtoDAO.atualizar(id, produto));
     }
 
+    @Transactional
     public void excluir(Long id) {
+        validaBuscarPorId(id);
+        produtoDAO.excluir(id);
+    }
+
+    private Produto validaBuscarPorId(Long id) {
         try {
-            Produto obterProduto = produtoDAO.buscarPorId(id);
-            if (!Objects.isNull(obterProduto)) {
-                produtoDAO.excluir(id);
-            }
+            return produtoDAO.buscarPorId(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
         }
     }
 
-    private void verificaPossuiFilhos(Long categoriaId) {
+    private void validaPossuiFilhos(Long categoriaId) {
         // obtendo a entidade Categoria por intermédio do "categoriaId" presente na requisição
-        Categoria categoriaPai = categoriaDAO.buscarPorId(categoriaId);
+        Categoria categoriaPai = categoriaService.validaBuscarPorId(categoriaId);
         // verificando se existe filhos na categoria obtida passando o id da mesma
-        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoria(categoriaPai.getId());
+        Boolean possuiFilhos = categoriaService.existeFilhosNaCategoria(categoriaPai.getId());
         if (possuiFilhos) {
             throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");
         }

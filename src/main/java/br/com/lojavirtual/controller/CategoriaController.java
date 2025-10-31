@@ -4,6 +4,8 @@ import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.service.CategoriaService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +22,17 @@ public class CategoriaController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CategoriaResponse> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<CategoriaResponse> buscarPorId(@NotNull @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.buscarPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponse>> listar() {
-        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.listar());
+    public ResponseEntity<List<CategoriaResponse>> listar(
+            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
+            @RequestParam(value = "numeroPagina", required = false, defaultValue = "1") Integer numeroPagina,
+            @RequestParam(value = "tamanhoPagina", required = false, defaultValue = "8") Integer tamanhoPagina
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.listar(ativo, numeroPagina, tamanhoPagina));
     }
 
     @PostMapping

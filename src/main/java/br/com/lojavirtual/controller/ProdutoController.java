@@ -31,9 +31,11 @@ public class ProdutoController {
             @RequestParam(value = "id", required = false) Long categoriaId,
             @RequestParam(value = "min", required = false) Double precoMin,
             @RequestParam(value = "max", required = false) Double precoMax,
-            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo
+            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
+            @RequestParam(value = "numeroPagina", required = false, defaultValue = "1") Integer numeroPagina,
+            @RequestParam(value = "tamanhoPagina", required = false, defaultValue = "8") Integer tamanhoPagina
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(produtoService.listar(nome, categoriaId, precoMin, precoMax, ativo));
+        return ResponseEntity.status(HttpStatus.OK).body(produtoService.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina));
     }
 
     @PostMapping

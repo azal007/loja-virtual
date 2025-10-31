@@ -9,7 +9,7 @@ import java.math.RoundingMode;
 
 @Component
 public class ProdutoMapper {
-    public ProdutoResponse toDTO(Produto produto) {
+    public ProdutoResponse toResponse(Produto produto) {
         return new ProdutoResponse(
             produto.getId(),
             produto.getNome(),

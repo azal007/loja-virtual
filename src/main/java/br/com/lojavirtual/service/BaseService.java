@@ -14,22 +14,18 @@ public class BaseService<T extends BaseDAO> {
         this.entidadeDAO = entityDAO;
     }
 
-    public void verificaEntidadePossuiMesmoNome(String nome, String nomeEntidade) {
+    public void validaEntidadePossuiMesmoNome(String nome) {
         // verificando se o nome da categoria informada já existe
-        Boolean possuiMesmoNome = entidadeDAO.possuiMesmoNome(nome);
+        Boolean possuiMesmoNome = entidadeDAO.verificaPossuiMesmoNome(nome);
         if (possuiMesmoNome) {
-            throw new BusinessException(String.format("Não é possível cadastrar %s com o mesmo nome.", nomeEntidade));
+            throw new BusinessException("O nome informado já existe.");
         }
     }
 
-    public void verificaCategoriaExiste(Long categoriaId) {
-        // Verifica se o campo "categoriId" está preenchido na requisição
-        if (categoriaId != null) {
-            // verificando se a categoria informada existe
-            Boolean existe = categoriaDAO.existeCategoria(categoriaId);
-            if (!existe) {
-                throw new BusinessException("A categoria informada não existe.");
-            }
+    public void validaCategoriaExiste(Long categoriaId) {
+        Boolean existe = categoriaDAO.existeCategoria(categoriaId);
+        if (!existe) {
+            throw new BusinessException("A categoria informada não existe.");
         }
     }
 }

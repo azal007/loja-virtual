@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Repository
@@ -33,9 +35,30 @@ public class CategoriaDAO extends BaseDAO {
         }
     }
 
-    public List<Categoria> listar(){
+    public List<Categoria> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina){
         try {
-            return jdbcTemplate.query("SELECT * FROM Categorias c WHERE c.ativo = TRUE", new BeanPropertyRowMapper<>(Categoria.class));
+            String sql = "SELECT * FROM Categorias c WHERE 1=1";
+            ArrayList<Object> parametros = new ArrayList<>();
+
+            if (!Objects.isNull(ativo)) {
+                sql += " AND c.ativo LIKE ?";
+                parametros.add("%" + ativo + "%");
+            }
+
+            if (!Objects.isNull(numeroPagina)) {
+                sql += " AND c.ativo LIKE ?";
+                parametros.add("%" + ativo + "%");
+            }
+
+            if (!Objects.isNull(tamanhoPagina)) {
+                numeroPagina = (numeroPagina - 1) * tamanhoPagina;
+                sql += " LIMIT ? OFFSET ?";
+                parametros.add(tamanhoPagina);
+                parametros.add(numeroPagina);
+            }
+
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Categoria.class), parametros.toArray());
+
         } catch (Exception e) {
             log.error("Ocorreu um erro ao listar as categorias.", e);
             throw new IntegrationException();

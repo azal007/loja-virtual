@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Repository
@@ -31,28 +32,36 @@ public class UsuarioDAO {
         }
     }
 
-    public List<Usuario> listar(String nome, String cpf, String email, Boolean ativo) {
+    public List<Usuario> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         try {
             String sql = "SELECT * FROM Usuarios u WHERE 1=1";
             List<Object> parametros = new ArrayList<>();
 
-            if (nome != null) {
+            if (!Objects.isNull(nome)) {
                 sql += " AND u.nome LIKE ?";
                 parametros.add("%" + nome + "%");
             }
-            if (cpf != null) {
+
+            if (!Objects.isNull(cpf)) {
                 sql += " AND cpf LIKE ?";
                 parametros.add("%" + cpf + "%");
             }
 
-            if (email != null) {
+            if (!Objects.isNull(email)) {
                 sql += " AND email LIKE ?";
                 parametros.add("%" + email + "%");
             }
 
-            if (ativo != null) {
+            if (!Objects.isNull(ativo)) {
                 sql += " AND ativo = ?";
                 parametros.add(ativo);
+            }
+
+            if (!Objects.isNull(tamanhoPagina)) {
+                numeroPagina = (numeroPagina - 1) * tamanhoPagina;
+                sql += " LIMIT ? OFFSET ?";
+                parametros.add(tamanhoPagina);
+                parametros.add(numeroPagina);
             }
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Usuario.class), parametros.toArray());
         } catch (Exception e) {
@@ -94,4 +103,8 @@ public class UsuarioDAO {
             throw new IntegrationException();
         }
     }
+
+    public Boolean validaPossuiMesmoEmail(String email) {
+        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM Usuarios u WHERE u.email = ?)", Boolean.class, email);
+    };
 }

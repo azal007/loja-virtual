@@ -2,17 +2,15 @@ package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
-import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
-import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CategoriaService extends BaseService<CategoriaDAO> {
@@ -26,58 +24,56 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
     }
 
     public CategoriaResponse buscarPorId(Long id) {
-        try {
-            Categoria categoria = categoriaDAO.buscarPorId(id);
-            return categoriaMapper.toResponse(categoria);
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(Categoria.class.getSimpleName(), id);
-        }
+        return categoriaMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public List<CategoriaResponse> listar() {
-        List<Categoria> categoria = categoriaDAO.listar();
+    public List<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+        List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
 
         return categoria.stream().map(categoriaMapper::toResponse).toList();
     }
 
     public CategoriaResponse incluir(CategoriaRequest request) {
         String nome = request.getNome();
-        String nomeEntidade = "categorias";
         Long categoriaPaiId = request.getIdCategoriaPai();
         Categoria categoria = categoriaMapper.toEntity(request);
 
-        verificaCategoriaExiste(categoriaPaiId);
-        verificaEntidadePossuiMesmoNome(nome, nomeEntidade);
+        if (request.getIdCategoriaPai() != null) {
+            validaCategoriaExiste(categoriaPaiId);
+        }
+        validaEntidadePossuiMesmoNome(nome);
+
         return categoriaMapper.toResponse(categoriaDAO.incluir(categoria));
     }
 
+    @Transactional
     public CategoriaResponse atualizar(Long id, CategoriaRequest request) {
-        try {
-            // Se, no momento de atualizar uma categoria, eu informar uma categoria que não existe, lanço uma exception.
-            categoriaDAO.buscarPorId(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
-        }
-        // Se, no momento de atualizar uma categoria, eu informar uma categoria pai
-        if (request.getIdCategoriaPai() != null) {
-            // Se, no momento de atualizar uma categoria, for informada uma categoria pai que não existe, lanço uma exception.
-            Boolean existe = categoriaDAO.existeCategoria(request.getIdCategoriaPai());
-            if (!existe) {
-                throw new BusinessException("Categoria pai informada não existe");
-            }
-        }
+        String nome = request.getNome();
+        Long categoriaPaiId = request.getIdCategoriaPai();
+
+        validaBuscarPorId(id);
+        validaCategoriaExiste(categoriaPaiId);
+        validaEntidadePossuiMesmoNome(nome);
+
         Categoria categoria = categoriaMapper.toEntity(request);
         return categoriaMapper.toResponse(categoriaDAO.atualizar(id, categoria));
     }
 
+    @Transactional
     public void excluir(Long id) {
+        validaBuscarPorId(id);
+        categoriaDAO.excluir(id);
+    }
+
+    public Categoria validaBuscarPorId(Long id) {
         try {
-            Categoria obterCategoria = categoriaDAO.buscarPorId(id);
-            if (!Objects.isNull(obterCategoria)) {
-                categoriaDAO.excluir(id);
-            }
+            return categoriaDAO.buscarPorId(id);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(Categoria.class.getSimpleName(), id);
         }
+    }
+
+    public Boolean existeFilhosNaCategoria(Long categoriaPaiId) {
+        return categoriaDAO.existeFilhosNaCategoria(categoriaPaiId);
     }
 }
