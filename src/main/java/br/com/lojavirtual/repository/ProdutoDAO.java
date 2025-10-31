@@ -13,10 +13,11 @@ import java.util.List;
 
 @Slf4j
 @Repository
-public class ProdutoDAO {
+public class ProdutoDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
 
     public ProdutoDAO(JdbcTemplate jdbcTemplate) {
+        super();
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -102,9 +103,5 @@ public class ProdutoDAO {
             log.error("Ocorreu um erro ao excluir o produto com id {}.", id, e);
             throw new IntegrationException();
         }
-    }
-
-    public Boolean possuiMesmoNome(String nome) {
-        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Produtos p WHERE p.nome = ?)", Boolean.class, nome);
     }
 }

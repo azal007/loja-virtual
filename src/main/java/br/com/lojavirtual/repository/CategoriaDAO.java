@@ -14,10 +14,11 @@ import java.util.List;
 
 @Slf4j
 @Repository
-public class CategoriaDAO {
+public class CategoriaDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
 
     public CategoriaDAO(JdbcTemplate jdbcTemplate) {
+        super();
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -79,9 +80,5 @@ public class CategoriaDAO {
 
     public Boolean existeFilhosNaCategoria(Long idCategoriaPai){
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM Categorias c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
-    }
-
-    public Boolean possuiMesmoNome(String nome) {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) > 0 FROM Categorias c WHERE c.nome = ?", Boolean.class, nome);
     }
 }

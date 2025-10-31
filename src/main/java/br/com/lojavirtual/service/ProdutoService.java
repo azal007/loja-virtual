@@ -16,12 +16,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ProdutoService {
+public class ProdutoService extends BaseService<ProdutoDAO> {
     private final CategoriaDAO categoriaDAO;
     private final ProdutoDAO produtoDAO;
     private final ProdutoMapper produtoMapper;
 
     public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, CategoriaDAO categoriaDAO) {
+        super(produtoDAO);
         this.categoriaDAO = categoriaDAO;
         this.produtoDAO = produtoDAO;
         this.produtoMapper = produtoMapper;
@@ -43,29 +44,14 @@ public class ProdutoService {
     }
 
     public ProdutoResponse incluir(ProdutoRequest request) {
-        // Verifica se o campo "categoriId" está preenchido na requisição
-        if (request.getCategoriaId() != null) {
-            // obtendo id da Categoria que veio na requisição
-            Long categoriaId = request.getCategoriaId();
-            // verificando se a categoria informada existe
-            Boolean existe = categoriaDAO.existeCategoria(categoriaId);
-            if (!existe) {
-                throw new BusinessException("Categoria pai informada não existe");
-            }
-            // obtendo a entidade Categoria por intermédio do "categoriaId" presente na requisição
-            Categoria categoriaPai = categoriaDAO.buscarPorId(categoriaId);
-            // verificando se existe filhos na categoria obtida passando o id da mesma
-            Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoria(categoriaPai.getId());
-            if (possuiFilhos) {
-                throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");
-            }
-        }
-        // verificando se o nome do produto informado já existe
-        Boolean possuiMesmoNome = produtoDAO.possuiMesmoNome(request.getNome());
-        if (possuiMesmoNome) {
-            throw new BusinessException("Não é possível cadastrar produtos com o mesmo nome.");
-        }
+        String nome = request.getNome();
+        String nomeEntidade = "produtos";
+        Long categoriaId = request.getCategoriaId();
         Produto produto = produtoMapper.toEntity(request);
+
+        verificaCategoriaExiste(categoriaId);
+        verificaPossuiFilhos(categoriaId);
+        verificaEntidadePossuiMesmoNome(nome, nomeEntidade);
         return produtoMapper.toDTO(produtoDAO.incluir(produto));
     }
 
@@ -96,6 +82,16 @@ public class ProdutoService {
             }
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(Produto.class.getSimpleName(), id);
+        }
+    }
+
+    private void verificaPossuiFilhos(Long categoriaId) {
+        // obtendo a entidade Categoria por intermédio do "categoriaId" presente na requisição
+        Categoria categoriaPai = categoriaDAO.buscarPorId(categoriaId);
+        // verificando se existe filhos na categoria obtida passando o id da mesma
+        Boolean possuiFilhos = categoriaDAO.existeFilhosNaCategoria(categoriaPai.getId());
+        if (possuiFilhos) {
+            throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");
         }
     }
 }

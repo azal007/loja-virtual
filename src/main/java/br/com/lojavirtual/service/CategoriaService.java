@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class CategoriaService {
+public class CategoriaService extends BaseService<CategoriaDAO> {
     private final CategoriaDAO categoriaDAO;
     private final CategoriaMapper categoriaMapper;
 
     public CategoriaService(CategoriaDAO categoriaDAO, CategoriaMapper categoriaMapper) {
+        super(categoriaDAO);
         this.categoriaDAO = categoriaDAO;
         this.categoriaMapper = categoriaMapper;
     }
@@ -40,22 +41,13 @@ public class CategoriaService {
     }
 
     public CategoriaResponse incluir(CategoriaRequest request) {
-        // Verifica se o campo "categoriId" está preenchido na requisição
-        if (request.getIdCategoriaPai() != null) {
-            // obtendo id da Categoria que veio na requisição
-            Long categoriaPai = request.getIdCategoriaPai();
-            // verificando se a categoria informada existe
-            Boolean existe = categoriaDAO.existeCategoria(categoriaPai);
-            if (!existe) {
-                throw new BusinessException("Categoria pai informada não existe");
-            }
-        }
-        // verificando se o nome da categoria informada já existe
-        Boolean possuiMesmoNome = categoriaDAO.possuiMesmoNome(request.getNome());
-        if (possuiMesmoNome) {
-            throw new BusinessException("Não é possível cadastrar categorias com o mesmo nome.");
-        }
+        String nome = request.getNome();
+        String nomeEntidade = "categorias";
+        Long categoriaPaiId = request.getIdCategoriaPai();
         Categoria categoria = categoriaMapper.toEntity(request);
+
+        verificaCategoriaExiste(categoriaPaiId);
+        verificaEntidadePossuiMesmoNome(nome, nomeEntidade);
         return categoriaMapper.toResponse(categoriaDAO.incluir(categoria));
     }
 
