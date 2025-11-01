@@ -40,13 +40,15 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
     }
 
     public ProdutoResponse incluir(ProdutoRequest request) {
+        Long id = request.getId();
         String nome = request.getNome();
         Long categoriaId = request.getCategoriaId();
         Produto produto = produtoMapper.toEntity(request);
 
         validaCategoriaExiste(categoriaId);
         validaPossuiFilhos(categoriaId);
-        validaEntidadePossuiMesmoNome(nome);
+        // TODO: REVISAR
+        validaEntidadePossuiMesmoNome(nome, id);
 
         return produtoMapper.toResponse(produtoDAO.incluir(produto));
     }
@@ -58,7 +60,8 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
 
         validaBuscarPorId(id);
         validaCategoriaExiste(categoriaId);
-        validaEntidadePossuiMesmoNome(nome);
+        // TODO: REVISAR
+        validaEntidadePossuiMesmoNome(nome, id);
 
         Produto produto = produtoMapper.toEntity(request);
         return produtoMapper.toResponse(produtoDAO.atualizar(id, produto));

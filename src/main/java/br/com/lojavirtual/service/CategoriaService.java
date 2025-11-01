@@ -35,13 +35,15 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
 
     public CategoriaResponse incluir(CategoriaRequest request) {
         String nome = request.getNome();
+        Long id = request.getId();
         Long categoriaPaiId = request.getIdCategoriaPai();
         Categoria categoria = categoriaMapper.toEntity(request);
 
         if (request.getIdCategoriaPai() != null) {
             validaCategoriaExiste(categoriaPaiId);
         }
-        validaEntidadePossuiMesmoNome(nome);
+        // TODO: REVISAR
+        validaEntidadePossuiMesmoNome(nome, id);
 
         return categoriaMapper.toResponse(categoriaDAO.incluir(categoria));
     }
@@ -53,7 +55,8 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
 
         validaBuscarPorId(id);
         validaCategoriaExiste(categoriaPaiId);
-        validaEntidadePossuiMesmoNome(nome);
+        // TODO: REVISAR
+        validaEntidadePossuiMesmoNome(nome, id);
 
         Categoria categoria = categoriaMapper.toEntity(request);
         return categoriaMapper.toResponse(categoriaDAO.atualizar(id, categoria));

@@ -14,9 +14,9 @@ public class BaseService<T extends BaseDAO> {
         this.entidadeDAO = entityDAO;
     }
 
-    public void validaEntidadePossuiMesmoNome(String nome) {
+    public void validaEntidadePossuiMesmoNome(String nome, Long id) {
         // verificando se o nome da categoria informada já existe
-        Boolean possuiMesmoNome = entidadeDAO.verificaPossuiMesmoNome(nome);
+        Boolean possuiMesmoNome = entidadeDAO.verificaPossuiMesmoNome(nome, id);
         if (possuiMesmoNome) {
             throw new BusinessException("O nome informado já existe.");
         }

@@ -8,10 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioRequest {
+    private Long id;
     @NotEmpty
     private String email;
     @NotEmpty
     private String senha;
-    @NotEmpty
-    private String confirmarSenha;
 }

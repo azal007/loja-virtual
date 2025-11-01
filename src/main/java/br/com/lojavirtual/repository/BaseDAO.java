@@ -24,7 +24,7 @@ public abstract class BaseDAO {
         }
         return nomeEntidade;
     }
-    public Boolean verificaPossuiMesmoNome(String nome) {
-        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ?)", Boolean.class, nome);
+    public Boolean verificaPossuiMesmoNome(String nome, Long id) {
+        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ? AND id <> ?)", Boolean.class, nome, id);
     }
 }

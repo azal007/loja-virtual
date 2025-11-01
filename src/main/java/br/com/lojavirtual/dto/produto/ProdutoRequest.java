@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoRequest {
-
+    private Long id;
     @NotEmpty
     private String nome;
     @NotEmpty

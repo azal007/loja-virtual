@@ -1,5 +1,6 @@
 package br.com.lojavirtual.mapper;
 
+import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
@@ -49,7 +50,23 @@ public class UsuarioMapper {
                 request.getDataNascimento(),
                 request.getEmail(),
                 null,
-                request.isHabilitarNotificacoesPromocoes(),
+                request.getHabilitarNotificacoesPromocoes(),
+                Boolean.TRUE,
+                null,
+                null
+        );
+    }
+
+    public Usuario toEntityPatch(UsuarioPatchRequest request) {
+        return new Usuario(
+                null,
+                request.getNome(),
+                request.getApelido(),
+                request.getCpf(),
+                request.getDataNascimento(),
+                request.getEmail(),
+                null,
+                request.getHabilitarNotificacoesPromocoes(),
                 Boolean.TRUE,
                 null,
                 null

@@ -1,7 +1,6 @@
 package br.com.lojavirtual.dto.usuario;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,18 +12,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioUpdateRequest {
-    private long id;
-    @NotEmpty
+public class UsuarioPatchRequest {
     private String nome;
-    @NotEmpty
     private String apelido;
-    @NotEmpty
     private String cpf;
-    @NotNull
     private Date dataNascimento;
-    @NotEmpty
     private String email;
-    @NotNull
     private Boolean habilitarNotificacoesPromocoes;
 }

@@ -1,5 +1,6 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
@@ -36,9 +37,12 @@ public class UsuarioService {
 
     public UsuarioResponse incluir(UsuarioRequest request) {
         String email = request.getEmail();
-        Usuario usuario = usuarioMapper.toEntity(request);
+        Long id = request.getId();
 
-        validaPossuiMesmoEmail(email);
+        // TODO: REVISAR
+        validaPossuiMesmoEmail(email, id);
+
+        Usuario usuario = usuarioMapper.toEntity(request);
 
         return usuarioMapper.toResponse(usuarioDAO.incluir(usuario));
     }
@@ -48,9 +52,39 @@ public class UsuarioService {
         String email = request.getEmail();
 
         validaBuscarPorId(id);
-        validaPossuiMesmoEmail(email);
+        validaPossuiMesmoEmail(email, id);
 
         Usuario usuario = usuarioMapper.toEntityUpdate(request);
+        return usuarioMapper.toResponse(usuarioDAO.atualizar(id, usuario));
+    }
+
+    @Transactional
+    public UsuarioResponse atualizarParcial(Long id, UsuarioPatchRequest request) {
+        String email = request.getEmail();
+
+        validaBuscarPorId(id);
+        validaPossuiMesmoEmail(email, id);
+
+        if (request.getNome() != null) {
+            request.setNome(request.getNome());
+        }
+        if (request.getApelido() != null) {
+            request.setApelido(request.getApelido());
+        }
+        if (request.getCpf() != null) {
+            request.setCpf(request.getCpf());
+        }
+        if (request.getDataNascimento() != null) {
+            request.setDataNascimento(request.getDataNascimento());
+        }
+        if (request.getEmail() != null) {
+            request.setEmail(request.getEmail());
+        }
+        if (request.getHabilitarNotificacoesPromocoes() != null) {
+            request.setHabilitarNotificacoesPromocoes(request.getHabilitarNotificacoesPromocoes());
+        }
+
+        Usuario usuario = usuarioMapper.toEntityPatch(request);
         return usuarioMapper.toResponse(usuarioDAO.atualizar(id, usuario));
     }
 
@@ -68,8 +102,8 @@ public class UsuarioService {
         }
     }
 
-    private void validaPossuiMesmoEmail(String email) {
-        Boolean possuiMesmoEmail = usuarioDAO.validaPossuiMesmoEmail(email);
+    private void validaPossuiMesmoEmail(String email, Long id) {
+        Boolean possuiMesmoEmail = usuarioDAO.validaPossuiMesmoEmail(email, id);
         if (possuiMesmoEmail) {
             throw new BusinessException("O email informado já existe.");
         }

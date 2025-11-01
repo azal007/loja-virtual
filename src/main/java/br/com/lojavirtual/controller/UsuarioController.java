@@ -1,5 +1,6 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
@@ -45,6 +46,11 @@ public class UsuarioController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<UsuarioResponse> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizar(id, request));
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<UsuarioResponse> atualizarParcial(@PathVariable Long id, @RequestBody UsuarioPatchRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizarParcial(id, request));
     }
 
     @DeleteMapping(value = "/{id}")
