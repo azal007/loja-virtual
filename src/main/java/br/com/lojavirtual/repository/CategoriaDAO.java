@@ -41,13 +41,8 @@ public class CategoriaDAO extends BaseDAO {
             ArrayList<Object> parametros = new ArrayList<>();
 
             if (!Objects.isNull(ativo)) {
-                sql += " AND c.ativo LIKE ?";
-                parametros.add("%" + ativo + "%");
-            }
-
-            if (!Objects.isNull(numeroPagina)) {
-                sql += " AND c.ativo LIKE ?";
-                parametros.add("%" + ativo + "%");
+                sql += " AND c.ativo = ?";
+                parametros.add(ativo);
             }
 
             if (!Objects.isNull(tamanhoPagina)) {
@@ -56,7 +51,6 @@ public class CategoriaDAO extends BaseDAO {
                 parametros.add(tamanhoPagina);
                 parametros.add(numeroPagina);
             }
-
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Categoria.class), parametros.toArray());
 
         } catch (Exception e) {
