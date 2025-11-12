@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Categorias (
+CREATE TABLE IF NOT EXISTS categoria (
     id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
     nome VARCHAR(100) NOT NULL,
     ativo BOOLEAN DEFAULT TRUE,
@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS Categorias (
     id_categoria_pai BIGINT,
     CONSTRAINT fk_categoria_pai
         FOREIGN KEY (id_categoria_pai)
-        REFERENCES Categorias(id)
+        REFERENCES categoria(id)
         ON DELETE CASCADE
 );
