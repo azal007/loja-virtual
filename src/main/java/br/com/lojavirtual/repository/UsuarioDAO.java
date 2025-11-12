@@ -105,6 +105,6 @@ public class UsuarioDAO {
     }
 
     public Boolean validaPossuiMesmoEmail(String email, Long id) {
-        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM Usuarios u WHERE u.email = ? AND u.id <> ?)", Boolean.class, email, id);
+        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM Usuarios u WHERE u.email = ? AND u.id <> ? AND u.email <> '')", Boolean.class, email, id);
     };
 }

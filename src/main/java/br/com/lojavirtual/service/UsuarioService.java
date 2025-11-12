@@ -65,25 +65,6 @@ public class UsuarioService {
         validaBuscarPorId(id);
         validaPossuiMesmoEmail(email, id);
 
-        if (request.getNome() != null) {
-            request.setNome(request.getNome());
-        }
-        if (request.getApelido() != null) {
-            request.setApelido(request.getApelido());
-        }
-        if (request.getCpf() != null) {
-            request.setCpf(request.getCpf());
-        }
-        if (request.getDataNascimento() != null) {
-            request.setDataNascimento(request.getDataNascimento());
-        }
-        if (request.getEmail() != null) {
-            request.setEmail(request.getEmail());
-        }
-        if (request.getHabilitarNotificacoesPromocoes() != null) {
-            request.setHabilitarNotificacoesPromocoes(request.getHabilitarNotificacoesPromocoes());
-        }
-
         Usuario usuario = usuarioMapper.toEntityPatch(request);
         return usuarioMapper.toResponse(usuarioDAO.atualizar(id, usuario));
     }
