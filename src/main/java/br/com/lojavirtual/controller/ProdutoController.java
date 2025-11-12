@@ -1,7 +1,9 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.produto.ProdutoPatchRequest;
 import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
+import br.com.lojavirtual.dto.produto.ProdutoUpdateRequest;
 import br.com.lojavirtual.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -44,8 +46,13 @@ public class ProdutoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequest request) {
+    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizar(id, request));
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<ProdutoResponse> atualizarParcial(@PathVariable Long id, @Valid @RequestBody ProdutoPatchRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(produtoService.atualizarParcial(id, request));
     }
 
     @DeleteMapping(value = "/{id}")
