@@ -1,10 +1,11 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.categoria.CategoriaPatchRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.service.CategoriaService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,13 @@ public class CategoriaController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CategoriaResponse> atualizar(@PathVariable Long id, @Valid @RequestBody CategoriaRequest request) {
+    public ResponseEntity<CategoriaResponse> atualizar(@PathVariable Long id, @Valid @RequestBody CategoriaUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.atualizar(id, request));
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<CategoriaResponse> atualizarParcial(@PathVariable Long id, @Valid @RequestBody CategoriaPatchRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.atualizarParcial(id, request));
     }
 
     @DeleteMapping(value = "/{id}")

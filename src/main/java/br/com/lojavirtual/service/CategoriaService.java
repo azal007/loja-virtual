@@ -1,7 +1,9 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.categoria.CategoriaPatchRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
@@ -11,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CategoriaService extends BaseService<CategoriaDAO> {
@@ -42,23 +45,39 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
         if (request.getIdCategoriaPai() != null) {
             validaCategoriaExiste(categoriaPaiId);
         }
-        // TODO: REVISAR
         validaEntidadePossuiMesmoNome(nome, id);
 
         return categoriaMapper.toResponse(categoriaDAO.incluir(categoria));
     }
 
     @Transactional
-    public CategoriaResponse atualizar(Long id, CategoriaRequest request) {
+    public CategoriaResponse atualizar(Long id, CategoriaUpdateRequest request) {
         String nome = request.getNome();
         Long categoriaPaiId = request.getIdCategoriaPai();
 
-        validaBuscarPorId(id);
-        validaCategoriaExiste(categoriaPaiId);
-        // TODO: REVISAR
+        if (Objects.nonNull(validaBuscarPorId(id).getIdCategoriaPai())) {
+            validaCategoriaExiste(categoriaPaiId);
+        }
+
+        // pegar a categoria e verificar se ela nao possui pai,
+        // se nao possuir remover a possibilidade de atualizacao do campo categoria
         validaEntidadePossuiMesmoNome(nome, id);
 
-        Categoria categoria = categoriaMapper.toEntity(request);
+        Categoria categoria = categoriaMapper.toEntityUpdate(request);
+        return categoriaMapper.toResponse(categoriaDAO.atualizar(id, categoria));
+    }
+
+    @Transactional
+    public CategoriaResponse atualizarParcial(Long id, CategoriaPatchRequest request) {
+        String nome = request.getNome();
+        Long categoriaPaiId = request.getIdCategoriaPai();
+
+        if (Objects.nonNull(validaBuscarPorId(id).getIdCategoriaPai())) {
+            validaCategoriaExiste(categoriaPaiId);
+        }
+        validaEntidadePossuiMesmoNome(nome, id);
+
+        Categoria categoria = categoriaMapper.toEntityPatch(request);
         return categoriaMapper.toResponse(categoriaDAO.atualizar(id, categoria));
     }
 

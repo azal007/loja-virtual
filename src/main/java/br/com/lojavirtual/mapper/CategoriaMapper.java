@@ -1,7 +1,9 @@
 package br.com.lojavirtual.mapper;
 
+import br.com.lojavirtual.dto.categoria.CategoriaPatchRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
+import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.model.Categoria;
 import org.springframework.stereotype.Component;
 
@@ -28,4 +30,26 @@ public class CategoriaMapper {
             null
         );
     }
+    public Categoria toEntityUpdate(CategoriaUpdateRequest request) {
+        return new Categoria(
+                null,
+                request.getNome(),
+                request.getIdCategoriaPai(),
+                Boolean.TRUE,
+                null,
+                null
+        );
+    }
+
+    public Categoria toEntityPatch(CategoriaPatchRequest request) {
+        return new Categoria(
+                null,
+                request.getNome(),
+                request.getIdCategoriaPai(),
+                Boolean.TRUE,
+                null,
+                null
+        );
+    }
+
 }
