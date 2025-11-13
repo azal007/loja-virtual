@@ -58,9 +58,6 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
         if (Objects.nonNull(validaBuscarPorId(id).getIdCategoriaPai())) {
             validaCategoriaExiste(categoriaPaiId);
         }
-
-        // pegar a categoria e verificar se ela nao possui pai,
-        // se nao possuir remover a possibilidade de atualizacao do campo categoria
         validaEntidadePossuiMesmoNome(nome, id);
 
         Categoria categoria = categoriaMapper.toEntityUpdate(request);
