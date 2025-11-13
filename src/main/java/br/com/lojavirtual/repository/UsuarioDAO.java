@@ -23,7 +23,7 @@ public class UsuarioDAO {
 
     public Usuario buscarPorId(Long id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Usuarios u WHERE u.id = ?", new BeanPropertyRowMapper<>(Usuario.class), id);
+            return jdbcTemplate.queryForObject("SELECT * FROM usuario u WHERE u.id = ?", new BeanPropertyRowMapper<>(Usuario.class), id);
         } catch (EmptyResultDataAccessException e) {
            throw e;
         }  catch (Exception e) {
@@ -34,7 +34,7 @@ public class UsuarioDAO {
 
     public List<Usuario> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         try {
-            String sql = "SELECT * FROM Usuarios u WHERE 1=1";
+            String sql = "SELECT * FROM usuario u WHERE 1=1";
             List<Object> parametros = new ArrayList<>();
 
             if (!Objects.isNull(nome)) {
@@ -72,7 +72,7 @@ public class UsuarioDAO {
 
     public Usuario incluir(Usuario usuario) {
         try {
-            jdbcTemplate.update("INSERT INTO Usuarios (email, senha) VALUES (?, ?)", usuario.getEmail(), usuario.getSenha());
+            jdbcTemplate.update("INSERT INTO usuario (email, senha) VALUES (?, ?)", usuario.getEmail(), usuario.getSenha());
             Long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID() AS id", Long.class);
             return buscarPorId(id);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class UsuarioDAO {
 
     public Usuario atualizar(Long id, Usuario usuario) {
         try {
-            jdbcTemplate.update("UPDATE Usuarios u SET u.nome = ?, u.apelido = ?, u.cpf = ?, u.dataNascimento = ?, u.email = ?, u.habilitarNotificacoesPromocoes = ? WHERE u.id = ?", usuario.getNome(), usuario.getApelido(), usuario.getCpf(), usuario.getDataNascimento(), usuario.getEmail(), usuario.isHabilitarNotificacoesPromocoes(), id);
+            jdbcTemplate.update("UPDATE usuario u SET u.nome = ?, u.apelido = ?, u.cpf = ?, u.dataNascimento = ?, u.email = ?, u.habilitarNotificacoesPromocoes = ? WHERE u.id = ?", usuario.getNome(), usuario.getApelido(), usuario.getCpf(), usuario.getDataNascimento(), usuario.getEmail(), usuario.isHabilitarNotificacoesPromocoes(), id);
             return buscarPorId(id);
         } catch (EmptyResultDataAccessException e) {
             throw e;
@@ -95,7 +95,7 @@ public class UsuarioDAO {
 
     public void excluir(Long id) {
         try {
-            jdbcTemplate.update("UPDATE Usuarios u SET u.ativo = FALSE WHERE u.id = ?", id);
+            jdbcTemplate.update("UPDATE usuario u SET u.ativo = FALSE WHERE u.id = ?", id);
         } catch (EmptyResultDataAccessException e) {
             throw e;
         } catch (Exception e) {
@@ -105,6 +105,6 @@ public class UsuarioDAO {
     }
 
     public Boolean validaPossuiMesmoEmail(String email, Long id) {
-        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM Usuarios u WHERE u.email = ? AND u.id <> ?)", Boolean.class, email, id);
+        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM usuario u WHERE u.email = ? AND u.id <> ?)", Boolean.class, email, id);
     };
 }

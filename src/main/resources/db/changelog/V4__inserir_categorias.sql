@@ -1,4 +1,4 @@
-INSERT INTO Categorias (id, nome, ativo, id_categoria_pai) VALUES
+INSERT INTO categoria (id, nome, ativo, id_categoria_pai) VALUES
 (1, 'Hardware', 1, NULL),
 (2, 'Memória RAM', 1, 1),
 (3, 'DDR 4', 1, 2),
