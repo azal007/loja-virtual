@@ -1,7 +1,9 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.produto.ProdutoPatchRequest;
 import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
+import br.com.lojavirtual.dto.produto.ProdutoUpdateRequest;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.ProdutoMapper;
@@ -10,6 +12,7 @@ import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -54,16 +57,28 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
     }
 
     @Transactional
-    public ProdutoResponse atualizar(Long id, ProdutoRequest request) {
+    public ProdutoResponse atualizar(Long id, ProdutoUpdateRequest request) {
         String nome = request.getNome();
         Long categoriaId = request.getCategoriaId();
 
         validaBuscarPorId(id);
         validaCategoriaExiste(categoriaId);
-        // TODO: REVISAR
         validaEntidadePossuiMesmoNome(nome, id);
 
-        Produto produto = produtoMapper.toEntity(request);
+        Produto produto = produtoMapper.toEntityUpdate(request);
+        return produtoMapper.toResponse(produtoDAO.atualizar(id, produto));
+    }
+
+    @Transactional
+    public ProdutoResponse atualizarParcial(Long id, ProdutoPatchRequest request) {
+        String nome = request.getNome();
+        Long categoriaId = request.getCategoriaId();
+
+        validaBuscarPorId(id);
+        validaCategoriaExiste(categoriaId);
+        validaEntidadePossuiMesmoNome(nome, id);
+
+        Produto produto = produtoMapper.toEntityPatch(request);
         return produtoMapper.toResponse(produtoDAO.atualizar(id, produto));
     }
 
