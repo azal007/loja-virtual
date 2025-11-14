@@ -1,4 +1,4 @@
-INSERT INTO Produtos (id, nome, descricao, url_imagem, preco, ativo, categoria_id) VALUES
+INSERT INTO produto (id, nome, descricao, url_imagem, preco, ativo, categoria_id) VALUES
 (1, 'Memória DDR4 8GB', 'Memória RAM DDR4 8GB 3200MHz', 'https://img.terabyteshop.com.br/produto/g/memoria-ddr4-hiksemi-hiker-8gb-3200mhz-hsc408u32z1_178197.jpg', 159.90, 1, 3),
 (2, 'Memória DDR4 16GB', 'Memória RAM DDR4 16GB 3200MHz', 'https://img.terabyteshop.com.br/produto/g/memoria-ddr4-hiksemi-armor-16gb-3200mhz-hsc416u32z2_178248.jpg', 299.90, 1, 3),
 (3, 'Memória DDR4 32GB', 'Memória RAM DDR4 32GB 3200MHz', 'https://img.terabyteshop.com.br/produto/g/memoria-ddr4-kingston-fury-beast-rgb-32gb-2x16gb-3200mhz-preto-kf432c16bb2ak232_178505.jpg', 599.90, 1, 3),

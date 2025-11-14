@@ -24,7 +24,7 @@ public class ProdutoDAO extends BaseDAO {
 
     public Produto buscarPorId(Long id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Produtos p WHERE p.id = ?", new BeanPropertyRowMapper<>(Produto.class), id);
+            return jdbcTemplate.queryForObject("SELECT * FROM produto p WHERE p.id = ?", new BeanPropertyRowMapper<>(Produto.class), id);
         } catch (EmptyResultDataAccessException e) {
             throw e;
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class ProdutoDAO extends BaseDAO {
 
     public List<Produto> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         try {
-            String sql = "SELECT * FROM Produtos p WHERE 1=1";
+            String sql = "SELECT * FROM produto p WHERE 1=1";
             List<Object> parametros = new ArrayList<>();
 
             if (!Objects.isNull(nome)) {
@@ -85,8 +85,8 @@ public class ProdutoDAO extends BaseDAO {
 
     public Produto incluir(Produto produto) {
         try {
-            jdbcTemplate.update("INSERT INTO Produtos (nome, descricao, url_imagem, preco, categoria_id) VALUES(?, ?, ?, ?, ?)", produto.getNome(), produto.getDescricao(), produto.getUrlImagem(), produto.getPreco(), produto.getCategoriaId());
-            Long id = jdbcTemplate.queryForObject("SELECT p.id FROM Produtos p WHERE id = LAST_INSERT_ID()", Long.class);
+            jdbcTemplate.update("INSERT INTO produto (nome, descricao, url_imagem, preco, categoria_id) VALUES(?, ?, ?, ?, ?)", produto.getNome(), produto.getDescricao(), produto.getUrlImagem(), produto.getPreco(), produto.getCategoriaId());
+            Long id = jdbcTemplate.queryForObject("SELECT p.id FROM produto p WHERE id = LAST_INSERT_ID()", Long.class);
             return buscarPorId(id);
         } catch (Exception e) {
             log.error("Ocorreu um erro ao criar o produto.", e);
@@ -96,7 +96,7 @@ public class ProdutoDAO extends BaseDAO {
 
     public Produto atualizar(Long id, Produto produto) {
         try {
-            jdbcTemplate.update("UPDATE Produtos p SET p.nome = ?, p.descricao = ?, p.url_imagem = ?, p.preco = ?, p.categoria_id = ? WHERE (id) = ?", produto.getNome(), produto.getDescricao(), produto.getUrlImagem(), produto.getPreco(), produto.getCategoriaId(), id);
+            jdbcTemplate.update("UPDATE produto p SET p.nome = ?, p.descricao = ?, p.url_imagem = ?, p.preco = ?, p.categoria_id = ? WHERE (id) = ?", produto.getNome(), produto.getDescricao(), produto.getUrlImagem(), produto.getPreco(), produto.getCategoriaId(), id);
             return buscarPorId(id);
         } catch (Exception e) {
             log.error("Ocorreu um erro ao atualizar o produto com id {}.", id, e);
@@ -106,7 +106,7 @@ public class ProdutoDAO extends BaseDAO {
 
     public void excluir(Long id) {
         try {
-            jdbcTemplate.update("UPDATE Produtos p SET p.ativo = FALSE WHERE p.id = ?", id);
+            jdbcTemplate.update("UPDATE produto p SET p.ativo = FALSE WHERE p.id = ?", id);
         } catch (Exception e) {
             log.error("Ocorreu um erro ao excluir o produto com id {}.", id, e);
             throw new IntegrationException();

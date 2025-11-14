@@ -1,4 +1,4 @@
-INSERT INTO Usuarios (id, nome, apelido, cpf, dataNascimento, email, senha, habilitarNotificacoesPromocoes, ativo) VALUES
+INSERT INTO usuario (id, nome, apelido, cpf, dataNascimento, email, senha, habilitarNotificacoesPromocoes, ativo) VALUES
 (1, 'Alice Duarte', 'alice', '12345678901', '1995-04-12', 'alice@example.com', 'senha123', 1, 1),
 (2, 'Bruno Tavares', 'bruno', '23456789012', '1990-07-21', 'bruno@example.com', 'senha123', 1, 1),
 (3, 'Carolina Pires', 'carolina', '34567890123', '1988-12-05', 'carolina@example.com', 'senha123', 0, 1),
