@@ -7,6 +7,7 @@ import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -32,8 +33,12 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
 
     public List<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
+        int totalElementos = obterTotalElementos();
+        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
-        return categoria.stream().map(categoriaMapper::toResponse).toList();
+        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+
+        return categoria.stream().map(c -> categoriaMapper.toResponse(c, page)).toList();
     }
 
     public CategoriaResponse incluir(CategoriaRequest request) {

@@ -4,6 +4,7 @@ import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Usuario;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,27 @@ public class UsuarioMapper {
                 usuario.isAtivo(),
                 usuario.getCriadoEm(),
                 usuario.getCriadoEm()
+        );
+    }
+
+    public UsuarioResponse toResponse(Usuario usuario, Page page) {
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getApelido(),
+                usuario.getCpf(),
+                usuario.getDataNascimento(),
+                usuario.getEmail(),
+                usuario.isHabilitarNotificacoesPromocoes(),
+                usuario.isAtivo(),
+                usuario.getCriadoEm(),
+                usuario.getCriadoEm(),
+                new Page(
+                        page.getNumeroPagina(),
+                        page.getTamanhoPagina(),
+                        page.getTotalElementos(),
+                        page.getTotalPaginas()
+                )
         );
     }
 

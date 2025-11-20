@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Slf4j
 @Repository
-public class UsuarioDAO {
+public class UsuarioDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
 
     public UsuarioDAO(JdbcTemplate jdbcTemplate) {

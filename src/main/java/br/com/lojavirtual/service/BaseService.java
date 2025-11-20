@@ -1,6 +1,7 @@
 package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.exception.BusinessException;
+import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.repository.BaseDAO;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,9 @@ public class BaseService<T extends BaseDAO> {
         if (!existe) {
             throw new BusinessException("A categoria informada não existe.");
         }
+    }
+
+    public Integer obterTotalElementos() {
+        return entidadeDAO.obterTotalElementos();
     }
 }
