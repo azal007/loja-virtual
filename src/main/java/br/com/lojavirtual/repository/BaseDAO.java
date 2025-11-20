@@ -1,5 +1,6 @@
 package br.com.lojavirtual.repository;
 
+import br.com.lojavirtual.exception.IntegrationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,8 +12,7 @@ public abstract class BaseDAO {
     private final String tabela;
 
     public BaseDAO() {
-        this.tabela = obterNomeEntidade() + "s";
-//        log.info("Nome da tabela: " +  this.tabela);
+        this.tabela = obterNomeEntidade().toLowerCase();
     }
 
     public String obterNomeEntidade () {
@@ -25,6 +25,20 @@ public abstract class BaseDAO {
         return nomeEntidade;
     }
     public Boolean verificaPossuiMesmoNome(String nome, Long id) {
-        return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ? AND id <> ?)", Boolean.class, nome, id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ? AND id <> ?)", Boolean.class, nome, id);
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao verificar se existe algum registro de {} com mesmo nome do id informado ({}).", this.tabela, id, e);
+            throw new IntegrationException();
+        }
+    }
+
+    public Integer obterTotalElementos() {
+        try {
+            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + this.tabela, Integer.class);
+        } catch (Exception e) {
+            log.error("Ocorreu um erro buscar o total de elementos.", e);
+            throw new IntegrationException();
+        }
     }
 }

@@ -8,16 +8,14 @@ import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.ProdutoMapper;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Produto;
-import br.com.lojavirtual.repository.CategoriaDAO;
 import br.com.lojavirtual.repository.ProdutoDAO;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProdutoService extends BaseService<ProdutoDAO> {
@@ -38,8 +36,12 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
 
     public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina);
+        int totalElementos = obterTotalElementos();
+        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
-        return produto.stream().map(produtoMapper::toResponse).toList();
+        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+
+        return produto.stream().map(p -> produtoMapper.toResponse(p, page)).toList();
     }
 
     public ProdutoResponse incluir(ProdutoRequest request) {
@@ -50,7 +52,6 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
 
         validaCategoriaExiste(categoriaId);
         validaPossuiFilhos(categoriaId);
-        // TODO: REVISAR
         validaEntidadePossuiMesmoNome(nome, id);
 
         return produtoMapper.toResponse(produtoDAO.incluir(produto));

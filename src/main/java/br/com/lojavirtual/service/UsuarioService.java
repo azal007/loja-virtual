@@ -7,7 +7,9 @@ import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.UsuarioMapper;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Usuario;
+import br.com.lojavirtual.repository.ProdutoDAO;
 import br.com.lojavirtual.repository.UsuarioDAO;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,11 +18,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UsuarioService {
+public class UsuarioService extends BaseService<UsuarioDAO>{
     private final UsuarioDAO usuarioDAO;
     private final UsuarioMapper usuarioMapper;
 
     public UsuarioService (UsuarioDAO usuarioDAO, UsuarioMapper usuarioMapper) {
+        super(usuarioDAO);
         this.usuarioDAO = usuarioDAO;
         this.usuarioMapper = usuarioMapper;
     }
@@ -31,8 +34,11 @@ public class UsuarioService {
 
     public List<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina);
+        int totalElementos = obterTotalElementos();
+        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
-        return usuario.stream().map(usuarioMapper::toResponse).toList();
+        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+        return usuario.stream().map(u -> usuarioMapper.toResponse(u, page)).toList();
     }
 
     public UsuarioResponse incluir(UsuarioRequest request) {

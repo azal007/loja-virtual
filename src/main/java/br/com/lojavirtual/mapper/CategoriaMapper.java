@@ -5,6 +5,7 @@ import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Page;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,6 +18,23 @@ public class CategoriaMapper {
             categoria.getAtivo(),
             categoria.getCriadoEm(),
             categoria.getAtualizadoEm()
+        );
+    }
+
+    public CategoriaResponse toResponse(Categoria categoria, Page page) {
+        return new CategoriaResponse(
+                categoria.getId(),
+                categoria.getNome(),
+                categoria.getIdCategoriaPai(),
+                categoria.getAtivo(),
+                categoria.getCriadoEm(),
+                categoria.getAtualizadoEm(),
+                new Page(
+                    page.getNumeroPagina(),
+                    page.getTamanhoPagina(),
+                    page.getTotalElementos(),
+                    page.getTotalPaginas()
+                )
         );
     }
 
