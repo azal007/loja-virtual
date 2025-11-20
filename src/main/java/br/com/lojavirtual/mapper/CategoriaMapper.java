@@ -21,23 +21,6 @@ public class CategoriaMapper {
         );
     }
 
-    public CategoriaResponse toResponse(Categoria categoria, Page page) {
-        return new CategoriaResponse(
-                categoria.getId(),
-                categoria.getNome(),
-                categoria.getIdCategoriaPai(),
-                categoria.getAtivo(),
-                categoria.getCriadoEm(),
-                categoria.getAtualizadoEm(),
-                new Page(
-                    page.getNumeroPagina(),
-                    page.getTamanhoPagina(),
-                    page.getTotalElementos(),
-                    page.getTotalPaginas()
-                )
-        );
-    }
-
     public Categoria toEntity(CategoriaRequest request) {
         return new Categoria(
             null,

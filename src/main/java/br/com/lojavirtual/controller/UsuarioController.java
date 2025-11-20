@@ -1,5 +1,6 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
@@ -9,8 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/usuarios")
@@ -27,7 +26,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioResponse>> listar(
+    public ResponseEntity<PageResponse<UsuarioResponse>> listar(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "cpf", required = false) String cpf,
             @RequestParam(value = "email", required = false) String email,

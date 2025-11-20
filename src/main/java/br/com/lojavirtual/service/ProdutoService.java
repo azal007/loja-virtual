@@ -1,11 +1,13 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.produto.ProdutoPatchRequest;
 import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
 import br.com.lojavirtual.dto.produto.ProdutoUpdateRequest;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
+import br.com.lojavirtual.mapper.PageMapper;
 import br.com.lojavirtual.mapper.ProdutoMapper;
 import br.com.lojavirtual.model.Categoria;
 import br.com.lojavirtual.model.Page;
@@ -21,12 +23,14 @@ import java.util.List;
 public class ProdutoService extends BaseService<ProdutoDAO> {
     private final ProdutoDAO produtoDAO;
     private final ProdutoMapper produtoMapper;
+    private final PageMapper<ProdutoResponse> produtoResponsePageMapper;
     private final CategoriaService categoriaService;
 
-    public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, CategoriaService categoriaService) {
+    public ProdutoService(ProdutoDAO produtoDAO, ProdutoMapper produtoMapper, PageMapper<ProdutoResponse> produtoResponsePageMapper, CategoriaService categoriaService) {
         super(produtoDAO);
         this.produtoDAO = produtoDAO;
         this.produtoMapper = produtoMapper;
+        this.produtoResponsePageMapper = produtoResponsePageMapper;
         this.categoriaService = categoriaService;
     }
 
@@ -34,14 +38,18 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
         return produtoMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public List<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+    public PageResponse<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina);
+
         int totalElementos = obterTotalElementos();
         int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
         Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
 
-        return produto.stream().map(p -> produtoMapper.toResponse(p, page)).toList();
+        return produtoResponsePageMapper.toResponse(
+                page,
+                produto.stream().map(produtoMapper::toResponse).toList()
+        );
     }
 
     public ProdutoResponse incluir(ProdutoRequest request) {

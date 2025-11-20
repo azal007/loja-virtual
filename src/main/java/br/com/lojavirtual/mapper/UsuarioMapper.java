@@ -26,27 +26,6 @@ public class UsuarioMapper {
         );
     }
 
-    public UsuarioResponse toResponse(Usuario usuario, Page page) {
-        return new UsuarioResponse(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getApelido(),
-                usuario.getCpf(),
-                usuario.getDataNascimento(),
-                usuario.getEmail(),
-                usuario.isHabilitarNotificacoesPromocoes(),
-                usuario.isAtivo(),
-                usuario.getCriadoEm(),
-                usuario.getCriadoEm(),
-                new Page(
-                        page.getNumeroPagina(),
-                        page.getTamanhoPagina(),
-                        page.getTotalElementos(),
-                        page.getTotalPaginas()
-                )
-        );
-    }
-
     public Usuario toEntity(UsuarioRequest request) {
         return new Usuario(
                 null,

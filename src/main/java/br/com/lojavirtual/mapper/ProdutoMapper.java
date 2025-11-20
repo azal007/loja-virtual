@@ -26,26 +26,6 @@ public class ProdutoMapper {
         );
     }
 
-    public ProdutoResponse toResponse(Produto produto, Page page) {
-        return new ProdutoResponse(
-                produto.getId(),
-                produto.getNome(),
-                produto.getDescricao(),
-                produto.getUrlImagem(),
-                produto.getPreco().setScale(2, RoundingMode.HALF_UP),
-                produto.getAtivo(),
-                produto.getCriadoEm(),
-                produto.getAtualizadoEm(),
-                produto.getCategoriaId(),
-                new Page(
-                        page.getNumeroPagina(),
-                        page.getTamanhoPagina(),
-                        page.getTotalElementos(),
-                        page.getTotalPaginas()
-                )
-        );
-    }
-
     public Produto toEntity(ProdutoRequest request) {
         return new Produto(
                 null,
