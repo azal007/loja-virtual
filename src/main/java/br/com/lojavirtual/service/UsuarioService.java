@@ -1,12 +1,15 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
 import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.exception.EntityNotFoundException;
+import br.com.lojavirtual.mapper.PageMapper;
 import br.com.lojavirtual.mapper.UsuarioMapper;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Usuario;
 import br.com.lojavirtual.repository.UsuarioDAO;
 import jakarta.transaction.Transactional;
@@ -16,23 +19,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UsuarioService {
+public class UsuarioService extends BaseService<UsuarioDAO>{
     private final UsuarioDAO usuarioDAO;
     private final UsuarioMapper usuarioMapper;
+    private final PageMapper<UsuarioResponse> usuarioResponsePageMapper;
 
-    public UsuarioService (UsuarioDAO usuarioDAO, UsuarioMapper usuarioMapper) {
+    public UsuarioService (UsuarioDAO usuarioDAO, UsuarioMapper usuarioMapper, PageMapper<UsuarioResponse> usuarioResponsePageMapper) {
+        super(usuarioDAO);
         this.usuarioDAO = usuarioDAO;
         this.usuarioMapper = usuarioMapper;
+        this.usuarioResponsePageMapper = usuarioResponsePageMapper;
     }
 
     public UsuarioResponse buscarPorId(Long id) {
         return usuarioMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public List<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+    public PageResponse<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina);
+        int totalElementos = obterTotalElementos();
+        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
-        return usuario.stream().map(usuarioMapper::toResponse).toList();
+        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+
+        return usuarioResponsePageMapper.toResponse(
+                page,
+                usuario.stream().map(usuarioMapper::toResponse).toList()
+        );
     }
 
     public UsuarioResponse incluir(UsuarioRequest request) {

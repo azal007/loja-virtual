@@ -3,6 +3,7 @@ package br.com.lojavirtual.mapper;
 import br.com.lojavirtual.dto.produto.ProdutoPatchRequest;
 import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.dto.produto.ProdutoUpdateRequest;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Produto;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
 import org.springframework.stereotype.Component;

@@ -4,6 +4,7 @@ import br.com.lojavirtual.dto.usuario.UsuarioPatchRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioRequest;
 import br.com.lojavirtual.dto.usuario.UsuarioResponse;
 import br.com.lojavirtual.dto.usuario.UsuarioUpdateRequest;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.model.Usuario;
 import org.springframework.stereotype.Component;
 

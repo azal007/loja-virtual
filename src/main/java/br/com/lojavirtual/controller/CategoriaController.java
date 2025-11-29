@@ -1,5 +1,6 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.categoria.CategoriaPatchRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
@@ -28,7 +29,7 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponse>> listar(
+    public ResponseEntity<PageResponse<CategoriaResponse>> listar(
             @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
             @RequestParam(value = "numeroPagina", required = false, defaultValue = "1") Integer numeroPagina,
             @RequestParam(value = "tamanhoPagina", required = false, defaultValue = "8") Integer tamanhoPagina

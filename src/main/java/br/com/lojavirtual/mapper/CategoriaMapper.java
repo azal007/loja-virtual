@@ -5,6 +5,7 @@ import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Page;
 import org.springframework.stereotype.Component;
 
 @Component

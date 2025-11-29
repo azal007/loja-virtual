@@ -1,5 +1,6 @@
 package br.com.lojavirtual.controller;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.produto.ProdutoPatchRequest;
 import br.com.lojavirtual.dto.produto.ProdutoRequest;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
@@ -28,7 +29,7 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> listar(
+    public ResponseEntity<PageResponse<ProdutoResponse>> listar(
             @RequestParam(value = "nome", required=false) String nome,
             @RequestParam(value = "id", required = false) Long categoriaId,
             @RequestParam(value = "min", required = false) Double precoMin,

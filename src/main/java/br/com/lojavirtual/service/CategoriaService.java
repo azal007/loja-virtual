@@ -1,12 +1,15 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.dto.PageResponse;
 import br.com.lojavirtual.dto.categoria.CategoriaPatchRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaRequest;
 import br.com.lojavirtual.dto.categoria.CategoriaResponse;
 import br.com.lojavirtual.dto.categoria.CategoriaUpdateRequest;
 import br.com.lojavirtual.exception.EntityNotFoundException;
 import br.com.lojavirtual.mapper.CategoriaMapper;
+import br.com.lojavirtual.mapper.PageMapper;
 import br.com.lojavirtual.model.Categoria;
+import br.com.lojavirtual.model.Page;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,21 +22,30 @@ import java.util.Objects;
 public class CategoriaService extends BaseService<CategoriaDAO> {
     private final CategoriaDAO categoriaDAO;
     private final CategoriaMapper categoriaMapper;
+    private final PageMapper<CategoriaResponse> categoriaResponsePageMapper;
 
-    public CategoriaService(CategoriaDAO categoriaDAO, CategoriaMapper categoriaMapper) {
+    public CategoriaService(CategoriaDAO categoriaDAO, CategoriaMapper categoriaMapper, PageMapper<CategoriaResponse> categoriaResponsePageMapper) {
         super(categoriaDAO);
         this.categoriaDAO = categoriaDAO;
         this.categoriaMapper = categoriaMapper;
+        this.categoriaResponsePageMapper = categoriaResponsePageMapper;
     }
 
     public CategoriaResponse buscarPorId(Long id) {
         return categoriaMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public List<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+    public PageResponse<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
+        int totalElementos = obterTotalElementos();
+        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
-        return categoria.stream().map(categoriaMapper::toResponse).toList();
+        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+
+        return categoriaResponsePageMapper.toResponse(
+                page,
+                categoria.stream().map(categoriaMapper::toResponse).toList()
+        );
     }
 
     public CategoriaResponse incluir(CategoriaRequest request) {
