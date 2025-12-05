@@ -35,18 +35,18 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
         return categoriaMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public PageResponse<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
-        List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
-        int totalElementos = obterTotalElementos();
-        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
-
-        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
-
-        return categoriaResponsePageMapper.toResponse(
-                page,
-                categoria.stream().map(categoriaMapper::toResponse).toList()
-        );
-    }
+//    public PageResponse<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+//        List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
+//        int totalElementos = obterTotalElementos();
+//        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
+//
+//        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+//
+//        return categoriaResponsePageMapper.toResponse(
+//                page,
+//                categoria.stream().map(categoriaMapper::toResponse).toList()
+//        );
+//    }
 
     public CategoriaResponse incluir(CategoriaRequest request) {
         String nome = request.getNome();

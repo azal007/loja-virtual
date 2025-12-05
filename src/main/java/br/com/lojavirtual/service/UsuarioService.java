@@ -35,18 +35,18 @@ public class UsuarioService extends BaseService<UsuarioDAO>{
         return usuarioMapper.toResponse(validaBuscarPorId(id));
     }
 
-    public PageResponse<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
-        List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina);
-        int totalElementos = obterTotalElementos();
-        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
-
-        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
-
-        return usuarioResponsePageMapper.toResponse(
-                page,
-                usuario.stream().map(usuarioMapper::toResponse).toList()
-        );
-    }
+//    public PageResponse<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+//        List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina);
+//        int totalElementos = obterTotalElementos();
+//        int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
+//
+//        Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
+//
+//        return usuarioResponsePageMapper.toResponse(
+//                page,
+//                usuario.stream().map(usuarioMapper::toResponse).toList()
+//        );
+//    }
 
     public UsuarioResponse incluir(UsuarioRequest request) {
         String email = request.getEmail();

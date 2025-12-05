@@ -26,16 +26,16 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<UsuarioResponse>> listar(
-            @RequestParam(value = "nome", required = false) String nome,
-            @RequestParam(value = "cpf", required = false) String cpf,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
-            @RequestParam(value = "numeroPagina",  required = false, defaultValue = "1") Integer numeroPagina,
-            @RequestParam(value = "tamanhoPagina",  required = false, defaultValue = "8") Integer tamanhoPagina
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina));
-    }
+//    public ResponseEntity<PageResponse<UsuarioResponse>> listar(
+//            @RequestParam(value = "nome", required = false) String nome,
+//            @RequestParam(value = "cpf", required = false) String cpf,
+//            @RequestParam(value = "email", required = false) String email,
+//            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
+//            @RequestParam(value = "numeroPagina",  required = false, defaultValue = "1") Integer numeroPagina,
+//            @RequestParam(value = "tamanhoPagina",  required = false, defaultValue = "8") Integer tamanhoPagina
+//    ) {
+//        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina));
+//    }
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> incluir(@Valid  @RequestBody UsuarioRequest request) {

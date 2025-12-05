@@ -2,6 +2,7 @@ package br.com.lojavirtual.repository;
 
 import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Produto;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,10 +17,13 @@ import java.util.Objects;
 @Repository
 public class ProdutoDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
+    @Getter
+    private final List<Object> pageParametros;
 
     public ProdutoDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
+        this.pageParametros = new ArrayList<>();
     }
 
     public Produto buscarPorId(Long id) {
@@ -111,5 +115,43 @@ public class ProdutoDAO extends BaseDAO {
             log.error("Ocorreu um erro ao excluir o produto com id {}.", id, e);
             throw new IntegrationException();
         }
+    }
+
+    public String obterParametros(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
+        String sqlFromWhere = "";
+        pageParametros.clear();
+
+        if (!Objects.isNull(nome)) {
+            sqlFromWhere += " AND nome LIKE ?";
+            pageParametros.add("%" + nome + "%");
+        }
+
+        if (!Objects.isNull(categoriaId)) {
+            sqlFromWhere += " AND categoria_id = ?";
+            pageParametros.add(categoriaId);
+        }
+
+        if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
+            sqlFromWhere += " AND preco >= ?";
+            pageParametros.add(precoMin);
+        }
+
+        if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
+            sqlFromWhere += " AND preco <= ?";
+            pageParametros.add(precoMax);
+        }
+
+        if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
+            sqlFromWhere += " AND preco BETWEEN ? AND ?";
+            pageParametros.add(precoMin);
+            pageParametros.add(precoMax);
+        }
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND ativo = ?";
+            pageParametros.add(ativo);
+        }
+
+        return sqlFromWhere;
     }
 }

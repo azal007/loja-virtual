@@ -29,13 +29,13 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<CategoriaResponse>> listar(
-            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
-            @RequestParam(value = "numeroPagina", required = false, defaultValue = "1") Integer numeroPagina,
-            @RequestParam(value = "tamanhoPagina", required = false, defaultValue = "8") Integer tamanhoPagina
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.listar(ativo, numeroPagina, tamanhoPagina));
-    }
+//    public ResponseEntity<PageResponse<CategoriaResponse>> listar(
+//            @RequestParam(value = "ativo", required = false, defaultValue = "true") Boolean ativo,
+//            @RequestParam(value = "numeroPagina", required = false, defaultValue = "1") Integer numeroPagina,
+//            @RequestParam(value = "tamanhoPagina", required = false, defaultValue = "8") Integer tamanhoPagina
+//    ) {
+//        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.listar(ativo, numeroPagina, tamanhoPagina));
+//    }
 
     @PostMapping
     public ResponseEntity<CategoriaResponse> incluir(@Valid @RequestBody CategoriaRequest request) {

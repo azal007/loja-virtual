@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
+import java.util.Objects;
+
 @Slf4j
 public abstract class BaseDAO {
     @Autowired
@@ -24,6 +27,7 @@ public abstract class BaseDAO {
         }
         return nomeEntidade;
     }
+
     public Boolean verificaPossuiMesmoNome(String nome, Long id) {
         try {
             return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM " + this.tabela + " WHERE nome = ? AND id <> ?)", Boolean.class, nome, id);
@@ -33,9 +37,10 @@ public abstract class BaseDAO {
         }
     }
 
-    public Integer obterTotalElementos() {
+    public Integer obterTotalElementos(Object sqlFromWhere, List<Object> parametros) {
         try {
-            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + this.tabela, Integer.class);
+            String sql = "SELECT COUNT(*) FROM " + this.tabela + " WHERE 1=1" + sqlFromWhere;
+            return jdbcTemplate.queryForObject(sql, Integer.class,  parametros.toArray());
         } catch (Exception e) {
             log.error("Ocorreu um erro buscar o total de elementos.", e);
             throw new IntegrationException();

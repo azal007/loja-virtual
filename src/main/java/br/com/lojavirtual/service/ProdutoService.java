@@ -17,7 +17,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProdutoService extends BaseService<ProdutoDAO> {
@@ -39,9 +41,11 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
     }
 
     public PageResponse<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
+        String sqlFromWhere = produtoDAO.obterParametros(nome, categoriaId, precoMin, precoMax, ativo);
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina);
+        List<Object> parametros = produtoDAO.getPageParametros();
 
-        int totalElementos = obterTotalElementos();
+        int totalElementos = obterTotalElementos(sqlFromWhere, parametros);
         int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
         Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);

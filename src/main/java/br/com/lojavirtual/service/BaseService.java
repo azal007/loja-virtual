@@ -1,10 +1,11 @@
 package br.com.lojavirtual.service;
 
 import br.com.lojavirtual.exception.BusinessException;
-import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.repository.BaseDAO;
 import br.com.lojavirtual.repository.CategoriaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class BaseService<T extends BaseDAO> {
     @Autowired
@@ -30,7 +31,7 @@ public class BaseService<T extends BaseDAO> {
         }
     }
 
-    public Integer obterTotalElementos() {
-        return entidadeDAO.obterTotalElementos();
+    public Integer obterTotalElementos(Object sqlFromWhere, List<Object> parametros) {
+        return entidadeDAO.obterTotalElementos(sqlFromWhere, parametros);
     }
 }
