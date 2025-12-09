@@ -2,6 +2,7 @@ package br.com.lojavirtual.repository;
 
 import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Usuario;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,9 +17,12 @@ import java.util.Objects;
 @Repository
 public class UsuarioDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
+    @Getter
+    private final List<Object> pageParametros;
 
     public UsuarioDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.pageParametros = new ArrayList<>();
     }
 
     public Usuario buscarPorId(Long id) {
@@ -107,4 +111,31 @@ public class UsuarioDAO extends BaseDAO {
     public Boolean validaPossuiMesmoEmail(String email, Long id) {
         return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM usuario u WHERE u.email = ? AND u.id <> ? AND u.email <> '')", Boolean.class, email, id);
     };
+
+    public String obterParametros(String nome, String cpf, String email, Boolean ativo) {
+        String sqlFromWhere = "";
+        pageParametros.clear();
+
+        if (!Objects.isNull(nome)) {
+            sqlFromWhere += " AND nome LIKE ?";
+            pageParametros.add("%" + nome + "%");
+        }
+
+        if (!Objects.isNull(cpf)) {
+            sqlFromWhere += " AND cpf LIKE ?";
+            pageParametros.add("%" + cpf + "%");
+        }
+
+        if (!Objects.isNull(email)) {
+            sqlFromWhere += " AND email LIKE ?";
+            pageParametros.add("%" + email + "%");
+        }
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND ativo = ?";
+            pageParametros.add(ativo);
+        }
+
+        return sqlFromWhere;
+    }
 }
