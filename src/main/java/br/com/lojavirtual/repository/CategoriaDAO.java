@@ -3,6 +3,7 @@ package br.com.lojavirtual.repository;
 import br.com.lojavirtual.exception.IntegrationException;
 import br.com.lojavirtual.model.Categoria;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -18,10 +19,13 @@ import java.util.Objects;
 @Repository
 public class CategoriaDAO extends BaseDAO {
     private final JdbcTemplate jdbcTemplate;
+    @Getter
+    private final List<Object> pageParametros;
 
     public CategoriaDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
+        this.pageParametros = new ArrayList<>();
     }
 
     public Categoria buscarPorId(Long id) {
@@ -97,5 +101,17 @@ public class CategoriaDAO extends BaseDAO {
 
     public Boolean existeFilhosNaCategoria(Long idCategoriaPai){
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM categoria c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
+    }
+
+    public String obterParametros(Boolean ativo) {
+        String sqlFromWhere = "";
+        pageParametros.clear();
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND ativo = ?";
+            pageParametros.add(ativo);
+        }
+
+        return sqlFromWhere;
     }
 }

@@ -41,8 +41,9 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
     }
 
     public PageResponse<ProdutoResponse> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
-        String sqlFromWhere = produtoDAO.obterParametros(nome, categoriaId, precoMin, precoMax, ativo);
         List<Produto> produto = produtoDAO.listar(nome, categoriaId, precoMin, precoMax, ativo, numeroPagina, tamanhoPagina);
+
+        String sqlFromWhere = produtoDAO.obterParametros(nome, categoriaId, precoMin, precoMax, ativo);
         List<Object> parametros = produtoDAO.getPageParametros();
 
         int totalElementos = obterTotalElementos(sqlFromWhere, parametros);
