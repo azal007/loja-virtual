@@ -37,41 +37,49 @@ public class ProdutoDAO extends BaseDAO {
         }
     }
 
+    public String montarFromWhereListagem(List<Object> parametros, String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
+        String sqlFromWhere = "FROM produto p WHERE 1=1";
+
+        if (!Objects.isNull(nome)) {
+            sqlFromWhere += " AND p.nome LIKE ?";
+            parametros.add("%" + nome + "%");
+        }
+
+        if (!Objects.isNull(categoriaId)) {
+            sqlFromWhere += " AND p.categoria_id = ?";
+            parametros.add(categoriaId);
+        }
+
+        if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
+            sqlFromWhere += " AND p.preco >= ?";
+            parametros.add(precoMin);
+        }
+
+        if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
+            sqlFromWhere += " AND p.preco <= ?";
+            parametros.add(precoMax);
+        }
+
+        if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
+            sqlFromWhere += " AND p.preco BETWEEN ? AND ?";
+            parametros.add(precoMin);
+            parametros.add(precoMax);
+        }
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND p.ativo = ?";
+            parametros.add(ativo);
+        }
+
+        return sqlFromWhere;
+    }
+
     public List<Produto> listar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         try {
-            String sql = "SELECT * FROM produto p WHERE 1=1";
+            String sql = "SELECT * ";
             List<Object> parametros = new ArrayList<>();
 
-            if (!Objects.isNull(nome)) {
-                sql += " AND p.nome LIKE ?";
-                parametros.add("%" + nome + "%");
-            }
-
-            if (!Objects.isNull(categoriaId)) {
-                sql += " AND p.categoria_id = ?";
-                parametros.add(categoriaId);
-            }
-
-            if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
-                sql += " AND p.preco >= ?";
-                parametros.add(precoMin);
-            }
-
-            if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
-                sql += " AND p.preco <= ?";
-                parametros.add(precoMax);
-            }
-
-            if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
-                sql += " AND p.preco BETWEEN ? AND ?";
-                parametros.add(precoMin);
-                parametros.add(precoMax);
-            }
-
-            if (!Objects.isNull(ativo)) {
-                sql += " AND p.ativo = ?";
-                parametros.add(ativo);
-            }
+            sql += montarFromWhereListagem(parametros, nome, categoriaId, precoMin, precoMax, ativo);
 
             if (!Objects.isNull(tamanhoPagina)) {
                 numeroPagina = (numeroPagina - 1) * tamanhoPagina;
@@ -81,6 +89,20 @@ public class ProdutoDAO extends BaseDAO {
             }
 
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class), parametros.toArray());
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao listar os produtos.", e);
+            throw new IntegrationException();
+        }
+    }
+
+    public Integer countListar(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
+        try {
+            String sql = "SELECT count(*) ";
+            List<Object> parametros = new ArrayList<>();
+
+            sql += montarFromWhereListagem(parametros, nome, categoriaId, precoMin, precoMax, ativo);
+
+            return jdbcTemplate.queryForObject(sql, Integer.class, parametros.toArray());
         } catch (Exception e) {
             log.error("Ocorreu um erro ao listar os produtos.", e);
             throw new IntegrationException();
@@ -117,41 +139,41 @@ public class ProdutoDAO extends BaseDAO {
         }
     }
 
-    public String obterParametros(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
-        String sqlFromWhere = "";
-        pageParametros.clear();
-
-        if (!Objects.isNull(nome)) {
-            sqlFromWhere += " AND nome LIKE ?";
-            pageParametros.add("%" + nome + "%");
-        }
-
-        if (!Objects.isNull(categoriaId)) {
-            sqlFromWhere += " AND categoria_id = ?";
-            pageParametros.add(categoriaId);
-        }
-
-        if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
-            sqlFromWhere += " AND preco >= ?";
-            pageParametros.add(precoMin);
-        }
-
-        if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
-            sqlFromWhere += " AND preco <= ?";
-            pageParametros.add(precoMax);
-        }
-
-        if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
-            sqlFromWhere += " AND preco BETWEEN ? AND ?";
-            pageParametros.add(precoMin);
-            pageParametros.add(precoMax);
-        }
-
-        if (!Objects.isNull(ativo)) {
-            sqlFromWhere += " AND ativo = ?";
-            pageParametros.add(ativo);
-        }
-
-        return sqlFromWhere;
-    }
+//    public String obterParametros(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
+//        String sqlFromWhere = "";
+//        pageParametros.clear();
+//
+//        if (!Objects.isNull(nome)) {
+//            sqlFromWhere += " AND nome LIKE ?";
+//            pageParametros.add("%" + nome + "%");
+//        }
+//
+//        if (!Objects.isNull(categoriaId)) {
+//            sqlFromWhere += " AND categoria_id = ?";
+//            pageParametros.add(categoriaId);
+//        }
+//
+//        if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
+//            sqlFromWhere += " AND preco >= ?";
+//            pageParametros.add(precoMin);
+//        }
+//
+//        if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
+//            sqlFromWhere += " AND preco <= ?";
+//            pageParametros.add(precoMax);
+//        }
+//
+//        if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
+//            sqlFromWhere += " AND preco BETWEEN ? AND ?";
+//            pageParametros.add(precoMin);
+//            pageParametros.add(precoMax);
+//        }
+//
+//        if (!Objects.isNull(ativo)) {
+//            sqlFromWhere += " AND ativo = ?";
+//            pageParametros.add(ativo);
+//        }
+//
+//        return sqlFromWhere;
+//    }
 }
