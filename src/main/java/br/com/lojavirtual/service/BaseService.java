@@ -30,8 +30,4 @@ public class BaseService<T extends BaseDAO> {
             throw new BusinessException("A categoria informada não existe.");
         }
     }
-
-    public Integer obterTotalElementos(Object sqlFromWhere, List<Object> parametros) {
-        return entidadeDAO.obterTotalElementos(sqlFromWhere, parametros);
-    }
 }

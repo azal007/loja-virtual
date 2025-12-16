@@ -36,30 +36,39 @@ public class UsuarioDAO extends BaseDAO {
         }
     }
 
+    public String montarFromWhereListagem(List<Object> parametros, String nome, String cpf, String email, Boolean ativo) {
+        String sqlFromWhere = "FROM usuario u WHERE 1=1";
+
+        if (!Objects.isNull(nome)) {
+            sqlFromWhere += " AND u.nome LIKE ?";
+            parametros.add("%" + nome + "%");
+        }
+
+        if (!Objects.isNull(cpf)) {
+            sqlFromWhere += " AND cpf LIKE ?";
+            parametros.add("%" + cpf + "%");
+        }
+
+        if (!Objects.isNull(email)) {
+            sqlFromWhere += " AND email LIKE ?";
+            parametros.add("%" + email + "%");
+        }
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND ativo = ?";
+            parametros.add(ativo);
+        }
+
+
+        return sqlFromWhere;
+    }
+
     public List<Usuario> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         try {
-            String sql = "SELECT * FROM usuario u WHERE 1=1";
+            String sql = "SELECT * ";
             List<Object> parametros = new ArrayList<>();
 
-            if (!Objects.isNull(nome)) {
-                sql += " AND u.nome LIKE ?";
-                parametros.add("%" + nome + "%");
-            }
-
-            if (!Objects.isNull(cpf)) {
-                sql += " AND cpf LIKE ?";
-                parametros.add("%" + cpf + "%");
-            }
-
-            if (!Objects.isNull(email)) {
-                sql += " AND email LIKE ?";
-                parametros.add("%" + email + "%");
-            }
-
-            if (!Objects.isNull(ativo)) {
-                sql += " AND ativo = ?";
-                parametros.add(ativo);
-            }
+            sql += montarFromWhereListagem(parametros, nome, cpf, email, ativo);
 
             if (!Objects.isNull(tamanhoPagina)) {
                 numeroPagina = (numeroPagina - 1) * tamanhoPagina;
@@ -73,6 +82,21 @@ public class UsuarioDAO extends BaseDAO {
             throw new IntegrationException();
         }
     }
+
+    public Integer countListar(String nome, String cpf, String email, Boolean ativo) {
+        try {
+            String sql = "SELECT count(*) ";
+            List<Object> parametros = new ArrayList<>();
+
+            sql += montarFromWhereListagem(parametros, nome, cpf, email, ativo);
+
+            return jdbcTemplate.queryForObject(sql, Integer.class, parametros.toArray());
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao listar os produtos.", e);
+            throw new IntegrationException();
+        }
+    }
+
 
     public Usuario incluir(Usuario usuario) {
         try {
@@ -112,30 +136,30 @@ public class UsuarioDAO extends BaseDAO {
         return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM usuario u WHERE u.email = ? AND u.id <> ? AND u.email <> '')", Boolean.class, email, id);
     };
 
-    public String obterParametros(String nome, String cpf, String email, Boolean ativo) {
-        String sqlFromWhere = "";
-        pageParametros.clear();
-
-        if (!Objects.isNull(nome)) {
-            sqlFromWhere += " AND nome LIKE ?";
-            pageParametros.add("%" + nome + "%");
-        }
-
-        if (!Objects.isNull(cpf)) {
-            sqlFromWhere += " AND cpf LIKE ?";
-            pageParametros.add("%" + cpf + "%");
-        }
-
-        if (!Objects.isNull(email)) {
-            sqlFromWhere += " AND email LIKE ?";
-            pageParametros.add("%" + email + "%");
-        }
-
-        if (!Objects.isNull(ativo)) {
-            sqlFromWhere += " AND ativo = ?";
-            pageParametros.add(ativo);
-        }
-
-        return sqlFromWhere;
-    }
+//    public String obterParametros(String nome, String cpf, String email, Boolean ativo) {
+//        String sqlFromWhere = "";
+//        pageParametros.clear();
+//
+//        if (!Objects.isNull(nome)) {
+//            sqlFromWhere += " AND nome LIKE ?";
+//            pageParametros.add("%" + nome + "%");
+//        }
+//
+//        if (!Objects.isNull(cpf)) {
+//            sqlFromWhere += " AND cpf LIKE ?";
+//            pageParametros.add("%" + cpf + "%");
+//        }
+//
+//        if (!Objects.isNull(email)) {
+//            sqlFromWhere += " AND email LIKE ?";
+//            pageParametros.add("%" + email + "%");
+//        }
+//
+//        if (!Objects.isNull(ativo)) {
+//            sqlFromWhere += " AND ativo = ?";
+//            pageParametros.add(ativo);
+//        }
+//
+//        return sqlFromWhere;
+//    }
 }

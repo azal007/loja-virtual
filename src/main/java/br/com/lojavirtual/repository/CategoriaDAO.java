@@ -39,15 +39,24 @@ public class CategoriaDAO extends BaseDAO {
         }
     }
 
+    public String montarFromWhereListagem(List<Object> parametros, Boolean ativo) {
+        String sqlFromWhere = "FROM categoria c WHERE 1=1";
+
+        if (!Objects.isNull(ativo)) {
+            sqlFromWhere += " AND c.ativo = ?";
+            parametros.add(ativo);
+        }
+
+        return sqlFromWhere;
+    }
+
+
     public List<Categoria> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina){
         try {
-            String sql = "SELECT * FROM categoria c WHERE 1=1";
+            String sql = "SELECT * ";
             ArrayList<Object> parametros = new ArrayList<>();
 
-            if (!Objects.isNull(ativo)) {
-                sql += " AND c.ativo = ?";
-                parametros.add(ativo);
-            }
+            sql += montarFromWhereListagem(parametros, ativo);
 
             if (!Objects.isNull(tamanhoPagina)) {
                 numeroPagina = (numeroPagina - 1) * tamanhoPagina;
@@ -62,6 +71,21 @@ public class CategoriaDAO extends BaseDAO {
             throw new IntegrationException();
         }
     }
+
+    public Integer countListar(Boolean ativo) {
+        try {
+            String sql = "SELECT count(*) ";
+            List<Object> parametros = new ArrayList<>();
+
+            sql += montarFromWhereListagem(parametros, ativo);
+
+            return jdbcTemplate.queryForObject(sql, Integer.class, parametros.toArray());
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao listar os produtos.", e);
+            throw new IntegrationException();
+        }
+    }
+
 
     public Categoria incluir(Categoria categoria) {
         try {
@@ -103,15 +127,15 @@ public class CategoriaDAO extends BaseDAO {
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM categoria c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
 
-    public String obterParametros(Boolean ativo) {
-        String sqlFromWhere = "";
-        pageParametros.clear();
-
-        if (!Objects.isNull(ativo)) {
-            sqlFromWhere += " AND ativo = ?";
-            pageParametros.add(ativo);
-        }
-
-        return sqlFromWhere;
-    }
+//    public String obterParametros(Boolean ativo) {
+//        String sqlFromWhere = "";
+//        pageParametros.clear();
+//
+//        if (!Objects.isNull(ativo)) {
+//            sqlFromWhere += " AND ativo = ?";
+//            pageParametros.add(ativo);
+//        }
+//
+//        return sqlFromWhere;
+//    }
 }

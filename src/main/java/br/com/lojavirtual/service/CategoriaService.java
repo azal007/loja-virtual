@@ -38,10 +38,7 @@ public class CategoriaService extends BaseService<CategoriaDAO> {
     public PageResponse<CategoriaResponse> listar(Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Categoria> categoria = categoriaDAO.listar(ativo, numeroPagina, tamanhoPagina);
 
-        String sqlFromWhere = categoriaDAO.obterParametros(ativo);
-        List<Object> paramentros = categoriaDAO.getPageParametros();
-
-        int totalElementos = obterTotalElementos(sqlFromWhere, paramentros);
+        int totalElementos = categoriaDAO.countListar(ativo);
         int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
         Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);
