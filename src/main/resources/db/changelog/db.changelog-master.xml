@@ -10,5 +10,6 @@
     <include file="/db/changelog/V4__inserir_categorias.sql"/>
     <include file="/db/changelog/V5__inserir_produtos.sql"/>
     <include file="/db/changelog/V6__inserir_usuarios.sql"/>
-
+    <include file="/db/changelog/V7__criar_tabela_pedido.sql"/>
+    <include file="/db/changelog/V8__criar_tabela_item_pedido.sql"/>
 </databaseChangeLog>
