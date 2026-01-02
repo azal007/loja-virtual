@@ -112,6 +112,21 @@ public class UsuarioDAO extends BaseDAO {
         return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM usuario u WHERE u.email = ? AND u.id <> ? AND u.email <> '')", Boolean.class, email, id);
     };
 
+    public Usuario buscarPorEmail(String email) {
+        try {
+            return jdbcTemplate.queryForObject(
+                "SELECT * FROM usuario u WHERE u.email = ? AND u.ativo = TRUE",
+                new BeanPropertyRowMapper<>(Usuario.class),
+                email
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao buscar o usuario pelo email {}.", email, e);
+            throw new IntegrationException();
+        }
+    }
+
     public String obterParametros(String nome, String cpf, String email, Boolean ativo) {
         String sqlFromWhere = "";
         pageParametros.clear();
