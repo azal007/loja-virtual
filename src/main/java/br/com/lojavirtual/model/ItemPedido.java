@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class itemPedido {
+public class ItemPedido {
     private Long id;
     private Long pedidoId;
     private Long produtoId;
