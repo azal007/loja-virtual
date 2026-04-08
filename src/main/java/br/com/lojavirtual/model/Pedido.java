@@ -24,7 +24,7 @@ public class Pedido {
 
     public void calcularTotal() {
         this.total = itens.stream()
-                .mapToDouble(item -> item.getPrecoUnitario() * item.getQuantidade())
+                .mapToDouble(item -> item.getPrecoUnitario().doubleValue() * item.getQuantidade())
                 .sum();
     }
 }

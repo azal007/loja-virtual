@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class ItemPedido {
     private Long pedidoId;
     private Long produtoId;
     private Integer quantidade;
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
 }
