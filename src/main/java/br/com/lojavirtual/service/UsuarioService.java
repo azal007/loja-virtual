@@ -38,10 +38,7 @@ public class UsuarioService extends BaseService<UsuarioDAO>{
     public PageResponse<UsuarioResponse> listar(String nome, String cpf, String email, Boolean ativo, Integer numeroPagina, Integer tamanhoPagina) {
         List<Usuario> usuario = usuarioDAO.listar(nome, cpf, email, ativo, numeroPagina, tamanhoPagina);
 
-        String sqlFromWhere = usuarioDAO.obterParametros(nome, cpf, email, ativo);
-        List<Object> parametros = usuarioDAO.getPageParametros();
-
-        int totalElementos = obterTotalElementos(sqlFromWhere, parametros);
+        int totalElementos = usuarioDAO.countListar(nome, cpf, email, ativo);
         int totalPaginas = (int) Math.ceil((double) totalElementos / tamanhoPagina);
 
         Page page = new Page(numeroPagina, tamanhoPagina, totalElementos, totalPaginas);

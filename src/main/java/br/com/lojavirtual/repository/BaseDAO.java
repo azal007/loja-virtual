@@ -36,14 +36,4 @@ public abstract class BaseDAO {
             throw new IntegrationException();
         }
     }
-
-    public Integer obterTotalElementos(Object sqlFromWhere, List<Object> parametros) {
-        try {
-            String sql = "SELECT COUNT(*) FROM " + this.tabela + " WHERE 1=1" + sqlFromWhere;
-            return jdbcTemplate.queryForObject(sql, Integer.class,  parametros.toArray());
-        } catch (Exception e) {
-            log.error("Ocorreu um erro buscar o total de elementos.", e);
-            throw new IntegrationException();
-        }
-    }
 }
