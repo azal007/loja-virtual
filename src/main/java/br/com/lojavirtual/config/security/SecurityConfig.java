@@ -29,34 +29,20 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Endpoints publicos - Autenticacao
                 .requestMatchers("/auth/**").permitAll()
-
-                // Endpoints publicos - Produtos (apenas GET)
                 .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
-
-                // Endpoints publicos - Categorias (apenas GET)
                 .requestMatchers(HttpMethod.GET, "/categorias/**").permitAll()
-
-                // Endpoint publico - Cadastro de usuario
                 .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-
-                // Endpoints protegidos - Usuarios (GET, PUT, PATCH, DELETE)
                 .requestMatchers("/usuarios/**").authenticated()
-
-                // Endpoints protegidos - Produtos (POST, PUT, PATCH, DELETE)
                 .requestMatchers(HttpMethod.POST, "/produtos/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/produtos/**").authenticated()
                 .requestMatchers(HttpMethod.PATCH, "/produtos/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/produtos/**").authenticated()
-
-                // Endpoints protegidos - Categorias (POST, PUT, PATCH, DELETE)
                 .requestMatchers(HttpMethod.POST, "/categorias/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/categorias/**").authenticated()
                 .requestMatchers(HttpMethod.PATCH, "/categorias/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/categorias/**").authenticated()
-
-                // Qualquer outro endpoint requer autenticacao
+                .requestMatchers("/pedidos/**").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

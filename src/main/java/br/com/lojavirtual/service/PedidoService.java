@@ -1,8 +1,10 @@
 package br.com.lojavirtual.service;
 
+import br.com.lojavirtual.constantes.PedidoStatus;
 import br.com.lojavirtual.dto.pedido.ItemPedidoRequest;
 import br.com.lojavirtual.dto.pedido.PedidoResponse;
 import br.com.lojavirtual.dto.produto.ProdutoResponse;
+import br.com.lojavirtual.exception.BusinessException;
 import br.com.lojavirtual.model.ItemPedido;
 import br.com.lojavirtual.model.Pedido;
 import br.com.lojavirtual.model.Produto;
@@ -16,7 +18,6 @@ import java.util.List;
 public class PedidoService {
     private final PedidoDAO pedidoDAO;
     private final ProdutoService produtoService;
-    private static final Long USUARIO = 1L;
 
     public PedidoService(PedidoDAO pedidoDAO, ProdutoService produtoService) {
         this.pedidoDAO = pedidoDAO;
@@ -24,23 +25,18 @@ public class PedidoService {
     }
 
     @Transactional
-    public PedidoResponse incluirPedido(List<ItemPedidoRequest> itens) {
-        // Criando uma instância de Pedido com usuário fixo e total inicial zero
+    public PedidoResponse incluirPedido(List<ItemPedidoRequest> itens, Long userId) {
         Pedido pedido = new Pedido();
-        pedido.setUserId(USUARIO);
+        pedido.setUserId(userId);
         pedido.setTotal(0.0);
         pedido = pedidoDAO.incluirPedido(pedido);
 
-        // salvando os itens do pedido
         for (ItemPedidoRequest item : itens) {
-            // Criando uma instância de ItemPedido para cada item na lista
             ItemPedido itemPedido = new ItemPedido();
 
-            // Buscando o produto para obter o preço unitário
             Long produtoId = item.getProdutoId();
             ProdutoResponse produto = produtoService.buscarPorId(produtoId);
 
-            // Salvando as informações do item do pedido
             itemPedido.setPedidoId(pedido.getId());
             itemPedido.setProdutoId(item.getProdutoId());
             itemPedido.setQuantidade(item.getQuantidade());
@@ -62,13 +58,47 @@ public class PedidoService {
         return pedidoResponse;
     }
 
-    // TODO: Implementar a lógica de cancelamento de pedido
-    public Object cancelarPedido(Long id) {
-        return null;
+    @Transactional
+    public PedidoResponse cancelarPedido(Long id, Long userId) {
+        Pedido pedido = pedidoDAO.buscarPorId(id);
+
+        if (pedido == null) {
+            throw new BusinessException("Pedido não encontrado");
+        }
+
+        if (!pedido.getUserId().equals(userId)) {
+            throw new BusinessException("Pedido não pertence ao usuário");
+        }
+
+        if (pedido.getStatus() != PedidoStatus.CRIADO) {
+            throw new BusinessException("Somente pedidos com status CRIADO podem ser cancelados");
+        }
+
+        pedidoDAO.atualizarStatus(id, PedidoStatus.CANCELADO);
+        pedido = pedidoDAO.buscarPorId(id);
+
+        PedidoResponse pedidoResponse = new PedidoResponse();
+        pedidoResponse.setId(pedido.getId());
+        pedidoResponse.setUserId(pedido.getUserId());
+        pedidoResponse.setDataEmissao(pedido.getDataEmissao());
+        pedidoResponse.setStatus(pedido.getStatus());
+        pedidoResponse.setTotal(pedido.getTotal());
+        pedidoResponse.setItens(pedido.getItens());
+        return pedidoResponse;
     }
 
-    // TODO: Implementar a lógica de listagem de pedidos por usuário
-    public Object listarPedidosPorUsuario() {
-        return null;
+    public List<PedidoResponse> listarPedidosPorUsuario(Long userId) {
+        List<Pedido> pedidos = pedidoDAO.listarPorUsuario(userId);
+
+        return pedidos.stream().map(pedido -> {
+            PedidoResponse response = new PedidoResponse();
+            response.setId(pedido.getId());
+            response.setUserId(pedido.getUserId());
+            response.setDataEmissao(pedido.getDataEmissao());
+            response.setStatus(pedido.getStatus());
+            response.setTotal(pedido.getTotal());
+            response.setItens(pedido.getItens());
+            return response;
+        }).toList();
     }
 }

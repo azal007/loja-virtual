@@ -40,6 +40,28 @@ public class PedidoDAO {
         }
     }
 
+    public List<Pedido> listarPorUsuario(Long userId) {
+        try {
+            List<Pedido> pedidos = jdbcTemplate.query(
+                "SELECT * FROM pedido p WHERE p.user_id = ? ORDER BY p.data_emissao DESC",
+                new BeanPropertyRowMapper<>(Pedido.class), userId
+            );
+
+            for (Pedido pedido : pedidos) {
+                List<ItemPedido> itens = jdbcTemplate.query(
+                    "SELECT * FROM item_pedido WHERE pedido_id = ?",
+                    new BeanPropertyRowMapper<>(ItemPedido.class), pedido.getId()
+                );
+                pedido.setItens(itens);
+            }
+
+            return pedidos;
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao listar pedidos do usuário {}.", userId, e);
+            throw new IntegrationException();
+        }
+    }
+
     public Pedido incluirPedido(Pedido pedido) {
         try {
             jdbcTemplate.update("INSERT INTO pedido (user_id, status, total) VALUES (?, ?, ?)", pedido.getUserId(), PedidoStatus.CRIADO.name(), pedido.getTotal());
@@ -58,6 +80,15 @@ public class PedidoDAO {
             return itemPedido;
         } catch (Exception e) {
             log.error("Ocorreu um erro ao incluir o item do pedido.", e);
+            throw new IntegrationException();
+        }
+    }
+
+    public void atualizarStatus(Long id, PedidoStatus status) {
+        try {
+            jdbcTemplate.update("UPDATE pedido p SET p.status = ? WHERE p.id = ?", status.name(), id);
+        } catch (Exception e) {
+            log.error("Ocorreu um erro ao atualizar o status do pedido {}.", id, e);
             throw new IntegrationException();
         }
     }

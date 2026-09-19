@@ -14,4 +14,5 @@
     <include file="/db/changelog/V8__criar_tabela_item_pedido.sql"/>
     <include file="/db/changelog/V9__inserir_pedidos.sql"/>
     <include file="/db/changelog/V10__inserir_itens_do_pedidos.sql"/>
+    <include file="/db/changelog/V11__atualizar_enum_status_pedido.sql"/>
 </databaseChangeLog>
