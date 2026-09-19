@@ -138,42 +138,4 @@ public class ProdutoDAO extends BaseDAO {
             throw new IntegrationException();
         }
     }
-
-//    public String obterParametros(String nome, Long categoriaId, Double precoMin, Double precoMax, Boolean ativo) {
-//        String sqlFromWhere = "";
-//        pageParametros.clear();
-//
-//        if (!Objects.isNull(nome)) {
-//            sqlFromWhere += " AND nome LIKE ?";
-//            pageParametros.add("%" + nome + "%");
-//        }
-//
-//        if (!Objects.isNull(categoriaId)) {
-//            sqlFromWhere += " AND categoria_id = ?";
-//            pageParametros.add(categoriaId);
-//        }
-//
-//        if (!Objects.isNull(precoMin) && Objects.isNull(precoMax)) {
-//            sqlFromWhere += " AND preco >= ?";
-//            pageParametros.add(precoMin);
-//        }
-//
-//        if (!Objects.isNull(precoMax) && Objects.isNull(precoMin)) {
-//            sqlFromWhere += " AND preco <= ?";
-//            pageParametros.add(precoMax);
-//        }
-//
-//        if (!Objects.isNull(precoMin) && !Objects.isNull(precoMax)) {
-//            sqlFromWhere += " AND preco BETWEEN ? AND ?";
-//            pageParametros.add(precoMin);
-//            pageParametros.add(precoMax);
-//        }
-//
-//        if (!Objects.isNull(ativo)) {
-//            sqlFromWhere += " AND ativo = ?";
-//            pageParametros.add(ativo);
-//        }
-//
-//        return sqlFromWhere;
-//    }
 }

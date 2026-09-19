@@ -53,7 +53,6 @@ public class UsuarioService extends BaseService<UsuarioDAO>{
         String email = request.getEmail();
         Long id = request.getId();
 
-        // TODO: REVISAR
         validaPossuiMesmoEmail(email, id);
 
         Usuario usuario = usuarioMapper.toEntity(request);

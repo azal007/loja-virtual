@@ -29,7 +29,6 @@ public class AuthService {
             throw new BusinessException("Usuario inativo");
         }
 
-        // Comparacao de senha em texto plano (conforme solicitado)
         if (!request.getSenha().equals(usuario.getSenha())) {
             throw new BusinessException("Credenciais invalidas");
         }

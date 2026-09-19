@@ -106,9 +106,7 @@ public class ProdutoService extends BaseService<ProdutoDAO> {
     }
 
     private void validaPossuiFilhos(Long categoriaId) {
-        // obtendo a entidade Categoria por intermédio do "categoriaId" presente na requisição
         Categoria categoriaPai = categoriaService.validaBuscarPorId(categoriaId);
-        // verificando se existe filhos na categoria obtida passando o id da mesma
         Boolean possuiFilhos = categoriaService.existeFilhosNaCategoria(categoriaPai.getId());
         if (possuiFilhos) {
             throw new BusinessException("A categoria informada é inválida pois possui subcategorias.");

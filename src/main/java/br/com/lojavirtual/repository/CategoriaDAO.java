@@ -90,9 +90,7 @@ public class CategoriaDAO extends BaseDAO {
     public Categoria incluir(Categoria categoria) {
         try {
             jdbcTemplate.update("INSERT INTO categoria (nome, id_categoria_pai) VALUES (?, ?)", categoria.getNome(), categoria.getIdCategoriaPai());
-            // Recupera o último ID inserido no banco de dados
             Long id = jdbcTemplate.queryForObject("SELECT c.id  FROM categoria c WHERE c.id = LAST_INSERT_ID()", Long.class);
-            // Retorna a categoria recém-inserida com o ID gerado
             return buscarPorId(id);
         } catch (Exception e) {
             log.error("Ocorreu um erro ao criar a categoria.", e);
@@ -126,16 +124,4 @@ public class CategoriaDAO extends BaseDAO {
     public Boolean existeFilhosNaCategoria(Long idCategoriaPai){
         return jdbcTemplate.queryForObject("SELECT EXISTS (SELECT 1 FROM categoria c WHERE c.id_categoria_pai = ? AND c.ativo = TRUE)", Boolean.class, idCategoriaPai);
     }
-
-//    public String obterParametros(Boolean ativo) {
-//        String sqlFromWhere = "";
-//        pageParametros.clear();
-//
-//        if (!Objects.isNull(ativo)) {
-//            sqlFromWhere += " AND ativo = ?";
-//            pageParametros.add(ativo);
-//        }
-//
-//        return sqlFromWhere;
-//    }
 }
