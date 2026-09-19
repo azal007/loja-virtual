@@ -2,12 +2,13 @@ services:
   db:
     image: mysql:8.2
     container_name: mysql
+    env_file:
+      - .env
     environment:
       MYSQL_DATABASE: lojavirtual
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      # TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
