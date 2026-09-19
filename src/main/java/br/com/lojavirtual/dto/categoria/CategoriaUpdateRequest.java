@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,6 +13,6 @@ import java.math.BigDecimal;
 public class CategoriaUpdateRequest {
     @NotEmpty
     private String nome;
-    @NotEmpty
+    @NotNull
     private Long idCategoriaPai;
 }

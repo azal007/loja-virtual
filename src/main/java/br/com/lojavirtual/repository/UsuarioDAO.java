@@ -138,7 +138,7 @@ public class UsuarioDAO extends BaseDAO {
 
     public Usuario buscarPorEmail(String email) {
         try {
-            return jdbcTemplate.queryForObject("SELECT u.email FROM usuario u WHERE u.email = ?", new BeanPropertyRowMapper<>(Usuario.class), email);
+            return jdbcTemplate.queryForObject("SELECT * FROM usuario u WHERE u.email = ?", new BeanPropertyRowMapper<>(Usuario.class), email);
         } catch (EmptyResultDataAccessException e) {
             throw e;
         }  catch (Exception e) {
@@ -146,31 +146,4 @@ public class UsuarioDAO extends BaseDAO {
             throw new IntegrationException();
         }
     }
-
-//    public String obterParametros(String nome, String cpf, String email, Boolean ativo) {
-//        String sqlFromWhere = "";
-//        pageParametros.clear();
-//
-//        if (!Objects.isNull(nome)) {
-//            sqlFromWhere += " AND nome LIKE ?";
-//            pageParametros.add("%" + nome + "%");
-//        }
-//
-//        if (!Objects.isNull(cpf)) {
-//            sqlFromWhere += " AND cpf LIKE ?";
-//            pageParametros.add("%" + cpf + "%");
-//        }
-//
-//        if (!Objects.isNull(email)) {
-//            sqlFromWhere += " AND email LIKE ?";
-//            pageParametros.add("%" + email + "%");
-//        }
-//
-//        if (!Objects.isNull(ativo)) {
-//            sqlFromWhere += " AND ativo = ?";
-//            pageParametros.add(ativo);
-//        }
-//
-//        return sqlFromWhere;
-//    }
 }

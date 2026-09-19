@@ -22,7 +22,7 @@ public class UsuarioMapper {
                 usuario.isHabilitarNotificacoesPromocoes(),
                 usuario.isAtivo(),
                 usuario.getCriadoEm(),
-                usuario.getCriadoEm()
+                usuario.getAtualizadoEm()
         );
     }
 

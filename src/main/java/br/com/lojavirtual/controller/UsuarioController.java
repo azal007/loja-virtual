@@ -48,7 +48,7 @@ public class UsuarioController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<UsuarioResponse> atualizarParcial(@PathVariable Long id, @RequestBody UsuarioPatchRequest request) {
+    public ResponseEntity<UsuarioResponse> atualizarParcial(@PathVariable Long id, @Valid @RequestBody UsuarioPatchRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizarParcial(id, request));
     }
 
