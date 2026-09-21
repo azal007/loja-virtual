@@ -1,6 +1,6 @@
 package br.com.lojavirtual.dto;
 
-import br.com.lojavirtual.model.Page;
+import br.com.lojavirtual.model.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageResponse<T> {
-    private Page infos;
-    private List<T> resultados;
+    private PageInfo infos;
+    private List<T> results;
 }

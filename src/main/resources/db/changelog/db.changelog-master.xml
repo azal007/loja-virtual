@@ -4,15 +4,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="/db/changelog/V1__criar_tabela_categoria.sql"/>
-    <include file="/db/changelog/V2__criar_tabela_produto.sql"/>
-    <include file="/db/changelog/V3__criar_tabela_usuario.sql"/>
-    <include file="/db/changelog/V4__inserir_categorias.sql"/>
-    <include file="/db/changelog/V5__inserir_produtos.sql"/>
-    <include file="/db/changelog/V6__inserir_usuarios.sql"/>
-    <include file="/db/changelog/V7__criar_tabela_pedido.sql"/>
-    <include file="/db/changelog/V8__criar_tabela_item_pedido.sql"/>
-    <include file="/db/changelog/V9__inserir_pedidos.sql"/>
-    <include file="/db/changelog/V10__inserir_itens_do_pedidos.sql"/>
-    <include file="/db/changelog/V11__atualizar_enum_status_pedido.sql"/>
+    <include file="/db/changelog/V1__create_category_table.sql"/>
+    <include file="/db/changelog/V2__create_product_table.sql"/>
+    <include file="/db/changelog/V3__create_user_table.sql"/>
+    <include file="/db/changelog/V4__insert_categories.sql"/>
+    <include file="/db/changelog/V5__insert_products.sql"/>
+    <include file="/db/changelog/V6__insert_users.sql"/>
+    <include file="/db/changelog/V7__create_order_table.sql"/>
+    <include file="/db/changelog/V8__create_order_item_table.sql"/>
+    <include file="/db/changelog/V9__insert_orders.sql"/>
+    <include file="/db/changelog/V10__insert_order_items.sql"/>
 </databaseChangeLog>

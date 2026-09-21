@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS `user` (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
+    name TEXT,
+    nickname VARCHAR(200),
+    cpf VARCHAR(11),
+    birth_date DATE,
+    email VARCHAR(255),
+    password VARCHAR(255),
+    enable_promotional_notifications BOOLEAN DEFAULT FALSE,
+    admin BOOLEAN DEFAULT FALSE,
+    active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

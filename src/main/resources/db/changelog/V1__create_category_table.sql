@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS category (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    parent_category_id BIGINT,
+    CONSTRAINT fk_category_parent
+        FOREIGN KEY (parent_category_id)
+        REFERENCES category(id)
+        ON DELETE CASCADE
+);

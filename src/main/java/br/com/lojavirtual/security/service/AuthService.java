@@ -1,8 +1,8 @@
 package br.com.lojavirtual.security.service;
 
 import br.com.lojavirtual.exception.BusinessException;
-import br.com.lojavirtual.model.Usuario;
-import br.com.lojavirtual.repository.UsuarioDAO;
+import br.com.lojavirtual.model.User;
+import br.com.lojavirtual.repository.UserDAO;
 import br.com.lojavirtual.security.dto.LoginRequest;
 import br.com.lojavirtual.security.dto.LoginResponse;
 import org.springframework.stereotype.Service;
@@ -10,37 +10,38 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private final UsuarioDAO usuarioDAO;
+    private final UserDAO userDAO;
     private final JwtService jwtService;
 
-    public AuthService(UsuarioDAO usuarioDAO, JwtService jwtService) {
-        this.usuarioDAO = usuarioDAO;
+    public AuthService(UserDAO userDAO, JwtService jwtService) {
+        this.userDAO = userDAO;
         this.jwtService = jwtService;
     }
 
-    public LoginResponse autenticar(LoginRequest request) {
-        Usuario usuario = usuarioDAO.buscarPorEmail(request.getEmail());
+    public LoginResponse authenticate(LoginRequest request) {
+        User user = userDAO.findByEmail(request.getEmail());
 
-        if (usuario == null) {
-            throw new BusinessException("Credenciais invalidas");
+        if (user == null) {
+            throw new BusinessException("Invalid credentials");
         }
 
-        if (!usuario.isAtivo()) {
-            throw new BusinessException("Usuario inativo");
+        if (!user.getActive()) {
+            throw new BusinessException("Inactive user");
         }
 
-        if (!request.getSenha().equals(usuario.getSenha())) {
-            throw new BusinessException("Credenciais invalidas");
+        if (!request.getPassword().equals(user.getPassword())) {
+            throw new BusinessException("Invalid credentials");
         }
 
-        String token = jwtService.generateToken(usuario.getEmail(), usuario.getId());
+        String token = jwtService.generateToken(user.getEmail(), user.getId());
 
         return new LoginResponse(
             token,
             "Bearer",
-            usuario.getId(),
-            usuario.getEmail(),
-            usuario.getNome()
+            user.getId(),
+            user.getEmail(),
+            user.getName(),
+            user.getAdmin()
         );
     }
 }

@@ -5,12 +5,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 @Getter
 public class EntityNotFoundException extends EmptyResultDataAccessException {
-    private final String nome;
+    private final String name;
     private final Long id;
 
-    public EntityNotFoundException(String nome, Long id) {
+    public EntityNotFoundException(String name, Long id) {
         super(1);
-        this.nome = nome;
+        this.name = name;
         this.id = id;
     }
 
@@ -20,6 +20,6 @@ public class EntityNotFoundException extends EmptyResultDataAccessException {
     }
 
     public String message() {
-        return "Não foi possível encontrar a " + getNome().toLowerCase() + " com id " + getId() + ".";
+        return "Could not find the " + getName().toLowerCase() + " with id " + getId() + ".";
     }
 }

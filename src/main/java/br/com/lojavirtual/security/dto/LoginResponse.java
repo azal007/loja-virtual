@@ -11,8 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoginResponse {
     private String token;
-    private String tipo;
-    private Long usuarioId;
+    private String type;
+    private Long userId;
     private String email;
-    private String nome;
+    private String name;
+    private Boolean admin;
 }

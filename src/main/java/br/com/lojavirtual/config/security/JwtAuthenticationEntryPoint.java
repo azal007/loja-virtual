@@ -28,7 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         body.put("timestamp", LocalDateTime.now().toString());
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         body.put("error", "Unauthorized");
-        body.put("mensagem", "Acesso nao autorizado. Token invalido ou expirado.");
+        body.put("message", "Unauthorized access. Invalid or expired token.");
         body.put("path", request.getServletPath());
 
         new ObjectMapper().writeValue(response.getOutputStream(), body);
